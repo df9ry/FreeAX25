@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		xmlns:tp="http://df9ry.ampr.org/FreeAX25/Config"
+        targetNamespace="http://df9ry.ampr.org/FreeAX25/Config" 
+        elementFormDefault="qualified">
+    
+    <!-- The root element always have to be a Configuration -->    
+    <xs:element name="Configuration" type="tp:ConfigurationType"/>
+       
+    <!-- A Configuration has Settings and Plugins -->   
+    <xs:complexType name="ConfigurationType">
+    	<xs:sequence>
+    		<xs:element name="Settings" type="tp:SettingsType"
+    			minOccurs="0" maxOccurs="1">
+    			<xs:unique name="ConfigurationSettingsUnique">
+    				<xs:selector xpath="tp:Setting"/>
+    				<xs:field xpath="@name"/>
+    			</xs:unique>
+    		</xs:element>
+    		<xs:element name="Plugins" type="tp:PluginsType"
+    			minOccurs="0" maxOccurs="1">
+    			<xs:unique name="ConfigurationPluginsUnique">
+    				<xs:selector xpath="tp:Plugin"/>
+    				<xs:field xpath="@name"/>
+    			</xs:unique>
+    		</xs:element>
+    	</xs:sequence>
+		<xs:attribute name="name" type="xs:Name" use="required"/>
+    </xs:complexType>
+    
+    <!-- List of Plugins -->
+    <xs:complexType name="PluginsType">
+    	<xs:sequence>
+    		<xs:element name="Plugin" type="tp:PluginType"
+    			minOccurs="0" maxOccurs="unbounded"/>
+    	</xs:sequence>
+    </xs:complexType>
+    
+    <!--
+    	A Plugin has a name and optionally a file to load the
+    	Plugin from. If no file is specified this is a builtin
+    	Plugin. It can have any number of Settings.
+    	A Plugin can instantiate any number of instances.
+    -->
+    <xs:complexType name="PluginType">
+    	<xs:sequence>
+    		<xs:element name="Settings" type="tp:SettingsType"
+    			minOccurs="0" maxOccurs="1">
+    			<xs:unique name="PluginSettingsUnique">
+    				<xs:selector xpath="tp:Setting"/>
+    				<xs:field xpath="@name"/>
+    			</xs:unique>
+    		</xs:element>
+    		<xs:element name="Instances" type="tp:InstancesType"
+    			minOccurs="0" maxOccurs="1">
+    			<xs:unique name="PluginInstancesUnique">
+    				<xs:selector xpath="tp:Instance"/>
+    				<xs:field xpath="@name"/>
+    			</xs:unique>
+    		</xs:element>
+    	</xs:sequence>
+		<xs:attribute name="name" type="xs:Name" use="required"/>
+		<xs:attribute name="file" type="xs:string" use="optional"/>
+    </xs:complexType>
+    
+    <!-- List of Settings -->
+    <xs:complexType name="SettingsType">
+    	<xs:sequence>
+    		<xs:element name="Setting" type="tp:SettingType"
+    			minOccurs="0" maxOccurs="unbounded"/>
+    	</xs:sequence>
+    </xs:complexType>
+    
+    <!-- Every Setting has a name and a value (text-node) -->
+    <xs:complexType name="SettingType">
+    	<xs:simpleContent>
+    		<xs:extension base="xs:string">
+				<xs:attribute name="name" type="xs:string" use="required"/>
+    		</xs:extension>
+    	</xs:simpleContent>
+    </xs:complexType>
+    
+    <!-- List of Instances -->
+    <xs:complexType name="InstancesType">
+    	<xs:sequence>
+    		<xs:element name="Instance" type="tp:InstanceType"
+    			minOccurs="0" maxOccurs="unbounded"/>
+    	</xs:sequence>
+    </xs:complexType>
+
+	<!--
+		An Instance is a concrete realisation of a Plugin. Every
+		Instance have to have a unique name and can have any number
+		of Settings.
+	-->    
+    <xs:complexType name="InstanceType">
+    	<xs:sequence>
+    		<xs:element name="Settings" type="tp:SettingsType"
+    			minOccurs="0" maxOccurs="1">
+    			<xs:unique name="InstanceSettingsUnique">
+    				<xs:selector xpath="tp:Setting"/>
+    				<xs:field xpath="@name"/>
+    			</xs:unique>
+    		</xs:element>
+    	</xs:sequence>
+		<xs:attribute name="name" type="xs:Name" use="required"/>
+    </xs:complexType>
+    
+</xs:schema>

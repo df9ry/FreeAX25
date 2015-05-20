@@ -1,0 +1,5 @@
+### Git ignore file
+.cproject
+.project
+.settings/
+_*/

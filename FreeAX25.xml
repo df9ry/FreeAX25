@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration name="Default"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://df9ry.ampr.org/FreeAX25/Config FreeAX25.xsd" 
+	xmlns="http://df9ry.ampr.org/FreeAX25/Config">
+	
+	<Settings>
+	</Settings>
+	
+	<Plugins>
+
+		<!-- Builtin logger -->
+		<Plugin name="_LOGGER">
+			<Settings>
+				<!-- NONE, ERROR, WARNING, INFO, DEBUG -->
+				<Setting name="level">DEBUG</Setting>
+			</Settings>
+		</Plugin>
+		
+		<!-- Builtin timer -->
+		<Plugin name="_TIMER">
+			<Settings>
+				<!-- Timer tick in ms -->
+				<Setting name="tick">20</Setting>
+			</Settings>
+		</Plugin>
+		
+	</Plugins>
+	
+</Configuration>

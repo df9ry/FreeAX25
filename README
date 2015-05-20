@@ -1,0 +1,25 @@
+FreeAX25
+========
+
+Release 0.0.1 as of 2015-05-19, DF9RY - Tania (Tania@DF9RY.de)
+
+Flexible Packet Radio system that runs in the user space and don't
+rely on the AX.25 kernel implementation. This program is written in
+conventional C++11 and avoids system dependencies when possible.
+
+This project is the successor of project OpenAX25 that is hosted on
+Sourceforge: <...>. With this new project I try to avoid a couple of
+design flaws I learnt with OpenAX25.
+
+The project has been renamed to FreeAX25 to emphasize the freedom of
+the users and of subsequent developers to provide the ham radio
+community with a true free and open source code basis for their own
+experiments and developments.
+
+For more information about your freedom see the Free Software Foundation
+(FSF) at <....>
+
+This work is licensed entirely on the terms of GNU AGPL v 3.0. For details
+read agpl-3.0.html or agpl-3.0.txt or COPYING.
+
+73, de DF9RY / Tania
