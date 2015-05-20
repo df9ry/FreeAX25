@@ -54,7 +54,7 @@ inline std::string rtrim(std::string s) {
  * @return Trimmed string
  */
 inline std::string ltrim(std::string s) {
-	s.erase(s.find_first_not_of(" \t\n\r\f\v"));
+	s.erase(0, s.find_first_not_of(" \t\n\r\f\v"));
 	return s;
 }
 

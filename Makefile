@@ -21,9 +21,9 @@ else
 
 VPATH = $(SRCDIR)
 
-CXXFLAGS =	-std=c++11 -pedantic -Wall -g -fmessage-length=0
+CXXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0
 
-LDXFLAGS =	-std=c++11 -pedantic -Wall -g -fmessage-length=0
+LDXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0
 
 OBJS     =	FreeAX25.o \
 			XMLRuntime.o \

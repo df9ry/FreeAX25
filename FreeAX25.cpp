@@ -26,29 +26,39 @@
 
 #include <stdexcept>
 #include <string>
+#include <unistd.h>
 
 using namespace std;
 using namespace FreeAX25;
 
 int main(int argc, const char* argv[]) {
-	// Get program name and path:
-	string filename{};
+	// Change to program path to get shared objects loaded:
+	string startdir{argv[0]};
+	startdir.erase(startdir.find_last_of('/'));
+	chdir(startdir.c_str());
+
+	// Get the XML file path. This is either specified as an argument
+	// argv[1] or can be deduced by argv[0]:
+	string xmlpath{};
 	if (argc > 1) {
-		filename.append(argv[1]);
+		xmlpath.append(argv[1]);
 	} else {
-		filename.append(argv[0]);
-		if (Utils::endsWith(Utils::toLower(filename), ".exe"))
-			filename = filename.substr(0, filename.size()-4);
+		xmlpath.append(argv[0]);
+		xmlpath.erase(0, xmlpath.find_last_of('/') + 1);
+		// Remove ".exe" for windows boxes:
+		if (Utils::endsWith(Utils::toLower(xmlpath), ".exe"))
+			xmlpath = xmlpath.substr(0, xmlpath.size()-4);
+		// And last not least add the ".xml":
+		xmlpath.append(".xml");
 	}
-	filename.append(".xml");
 
 	FreeAX25::Environment env{};
-	env.logInfo("Parsing " + filename);
+	env.logInfo("Parsing " + xmlpath);
 
 	try {
 		// Create a XMLRuntime for input of configuration info:
 		XMLIO::XMLRuntime xmlio(&env);
-		xmlio.read(filename);
+		xmlio.read(xmlpath);
 		env.logInfo("Activating configuration \"" +
 				env.getConfiguration()->getId() + "\"");
 		Configuration& c = *env.getConfiguration();
