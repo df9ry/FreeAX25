@@ -1,5 +1,21 @@
-FreeAX25
-========
+
+Project FreeAX25
+Copyright (C) 2015  tania@df9ry.de
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+------------------------------------------------------------------------
 
 Release 0.0.1 as of 2015-05-19, DF9RY - Tania (Tania@DF9RY.de)
 
@@ -8,8 +24,9 @@ rely on the AX.25 kernel implementation. This program is written in
 conventional C++11 and avoids system dependencies when possible.
 
 This project is the successor of project OpenAX25 that is hosted on
-Sourceforge: <...>. With this new project I try to avoid a couple of
-design flaws I learnt with OpenAX25.
+Sourceforge: <http://sourceforge.net/projects/openax25>. With this
+new project I try to avoid a couple of design flaws I learnt with
+OpenAX25.
 
 The project has been renamed to FreeAX25 to emphasize the freedom of
 the users and of subsequent developers to provide the ham radio
@@ -17,7 +34,7 @@ community with a true free and open source code basis for their own
 experiments and developments.
 
 For more information about your freedom see the Free Software Foundation
-(FSF) at <....>
+(FSF) at <http://www.fsf.org>
 
 This work is licensed entirely on the terms of GNU AGPL v 3.0. For details
 read agpl-3.0.html or agpl-3.0.txt or COPYING.
