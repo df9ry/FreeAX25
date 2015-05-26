@@ -40,7 +40,10 @@ OBJS     =	FreeAX25.o \
 			Configuration.o \
 			Plugin.o \
 			Instance.o \
-			Setting.o
+			Setting.o \
+			ServerBase.o \
+			ServerProxy.o \
+			ClientProxy.o
 
 LIBS     =  -lJsonX -lB64 -lStringUtil \
 			-lpthread -lxerces-c -ldl
