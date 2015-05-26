@@ -17,7 +17,7 @@
  */
 
 #include "Logger.h"
-#include "Utils.h"
+#include "StringUtil.h"
 #include "Plugin.h"
 #include "Environment.h"
 
@@ -29,6 +29,7 @@
 #include <cstring>
 
 using namespace std;
+using namespace StringUtil;
 
 namespace FreeAX25 {
 
@@ -112,7 +113,7 @@ void Logger::_log(LogLevel l, const string& msg) {
  */
 LogLevel Logger::decode(const string& s) {
 	for (int i = 0; LEVELS[i] != nullptr; ++i)
-		if (strcmp(s.c_str(), Utils::rtrim(LEVELS[i]).c_str()) == 0)
+		if (strcmp(s.c_str(), rTrim(LEVELS[i]).c_str()) == 0)
 			return static_cast<LogLevel>(i);
 	throw invalid_argument("Log level \"" + s + "\"");
 }

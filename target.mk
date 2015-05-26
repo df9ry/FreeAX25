@@ -17,8 +17,13 @@
 .SUFFIXES:
 
 ifndef _ARCH
-_ARCH := $(shell print_arch)
+_ARCH := unknown
 export _ARCH
+endif
+
+ifndef _CONF
+_CONF := debug
+export _CONF
 endif
 
 OBJDIR := _$(_ARCH)-$(_CONF)

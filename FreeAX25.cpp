@@ -17,9 +17,9 @@
 */
 
 #include "XMLRuntime.h"
-#include "Utils.h"
 #include "Environment.h"
 #include "Configuration.h"
+#include "StringUtil.h"
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
@@ -29,6 +29,7 @@
 #include <unistd.h>
 
 using namespace std;
+using namespace StringUtil;
 using namespace FreeAX25;
 
 int main(int argc, const char* argv[]) {
@@ -46,7 +47,7 @@ int main(int argc, const char* argv[]) {
 		xmlpath.append(argv[0]);
 		xmlpath.erase(0, xmlpath.find_last_of('/') + 1);
 		// Remove ".exe" for windows boxes:
-		if (Utils::endsWith(Utils::toLower(xmlpath), ".exe"))
+		if (endsWith(toLower(xmlpath), ".exe"))
 			xmlpath = xmlpath.substr(0, xmlpath.size()-4);
 		// And last not least add the ".xml":
 		xmlpath.append(".xml");

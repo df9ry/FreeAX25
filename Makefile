@@ -21,14 +21,18 @@ else
 
 VPATH = $(SRCDIR)
 
-CXXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0
+CXXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0 \
+			-I../../libStringUtil \
+			-I../../libJsonX
 
-LDXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0
+LDXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0 \
+			-L../../libJsonX/_$(_ARCH)-$(_CONF) \
+			-L../../libB64/_$(_ARCH)-$(_CONF) \
+			-L../../libStringUtil/_$(_ARCH)-$(_CONF)
 
 OBJS     =	FreeAX25.o \
 			XMLRuntime.o \
 			DOMTreeErrorReporter.o \
-			Utils.o \
 			Logger.o \
 			Timer.o \
 			TimerManager.o \
@@ -38,7 +42,8 @@ OBJS     =	FreeAX25.o \
 			Instance.o \
 			Setting.o
 
-LIBS     =  -lpthread -lxerces-c -ldl
+LIBS     =  -lJsonX -lB64 -lStringUtil \
+			-lpthread -lxerces-c -ldl
 
 TARGET   =	FreeAX25
 
@@ -50,7 +55,14 @@ $(TARGET):	$(OBJS)
 	
 all: $(TARGET)
 	cp ../*.xml ../*.xsd .
+	cp ../../libStringUtil/_$(_ARCH)-$(_CONF)/libStringUtil.so .
+	cp ../../libJsonX/_$(_ARCH)-$(_CONF)/libJsonX.so .
+	cp ../../libB64/_$(_ARCH)-$(_CONF)/libB64.so .
 	echo "Build OK"
+	
+run: all
+	LD_LIBRARY_PATH=./ ./$(TARGET)
+	echo "Run OK"
 
 #----- Begin Boilerplate
 endif
