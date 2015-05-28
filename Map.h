@@ -38,6 +38,9 @@ using MapBase = typename std::map<std::string, std::unique_ptr<T>>;
 template <typename T>
 using MapIterator = typename MapBase<T>::iterator;
 
+template <typename T>
+using MapConstIterator = typename MapBase<T>::const_iterator;
+
 /**
  * Template for hashed maps with string keys and unique_ptr support.
  */

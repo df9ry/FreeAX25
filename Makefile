@@ -28,7 +28,8 @@ CXXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0 \
 LDXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0 \
 			-L../../libJsonX/_$(_ARCH)-$(_CONF) \
 			-L../../libB64/_$(_ARCH)-$(_CONF) \
-			-L../../libStringUtil/_$(_ARCH)-$(_CONF)
+			-L../../libStringUtil/_$(_ARCH)-$(_CONF) \
+			-L../../libSocketIO/_$(_ARCH)-$(_CONF)
 
 OBJS     =	FreeAX25.o \
 			XMLRuntime.o \
@@ -45,7 +46,7 @@ OBJS     =	FreeAX25.o \
 			ServerProxy.o \
 			ClientProxy.o
 
-LIBS     =  -lJsonX -lB64 -lStringUtil \
+LIBS     =  -lJsonX -lB64 -lStringUtil -lSocketIO \
 			-lpthread -lxerces-c -ldl
 
 TARGET   =	FreeAX25
