@@ -30,7 +30,7 @@ enum class MessagePriority {
  * Interface to a server.
  */
 class ClientProxy {
-	friend class ServerBase;
+	friend class ServerProxy;
 
 public:
 

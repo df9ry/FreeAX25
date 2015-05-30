@@ -63,7 +63,8 @@ public:
 	 * @return string value
 	 */
 	static const std::string asString(
-			Map<Setting>& map, const std::string& key, const std::string def="");
+			Map<Setting>& map, const std::string& key,
+			const std::string def="");
 
 	/**
 	 * Get value as integer
@@ -78,7 +79,8 @@ public:
 	 * @param def The default value
 	 * @return int value
 	 */
-	static int asInt(Map<Setting>& map, const std::string& key, int def=0);
+	static int asInt(Map<Setting>& map,
+			const std::string& key, int def=0);
 
 private:
 	const std::string m_name;

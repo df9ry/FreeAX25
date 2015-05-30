@@ -17,9 +17,52 @@ namespace FreeAX25 {
 
 class ServerBase;
 
+/**
+ * ServerProxies can be used to publish servers. If all
+ * ServerProxies are deleted then the server will be
+ * deleted.
+ */
 class ServerProxy {
 	friend class ServerBase;
 	friend class ClientProxy;
+
+public:
+	/**
+	 * Default constructor.
+	 */
+	ServerProxy();
+
+	/**
+	 * Copy constructor is deleted.
+	 * @param other Not used
+	 */
+	ServerProxy(const ServerProxy& other) = delete;
+
+	/**
+	 * Move constructor.
+	 * @param other Move source.
+	 */
+	ServerProxy(ServerProxy&& other);
+
+	/**
+	 * Copy assignment is deleted.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	ServerProxy& operator=(const ServerProxy& other) = delete;
+
+	/**
+	 * Move assignment.
+	 * @param other Source object.
+	 * @return Reference to target object.
+	 */
+	ServerProxy& operator=(ServerProxy&& other);
+
+	/**
+	 * Get a ClientProxy for the server.
+	 * @return Unique pointer to ClientProxy.
+	 */
+	ClientProxy* getClientProxy();
 
 private:
 	ServerProxy(ServerBase* server);

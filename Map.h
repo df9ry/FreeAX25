@@ -33,6 +33,11 @@ template <typename T>
 using MapBase = typename std::map<std::string, std::unique_ptr<T>>;
 
 /**
+ * Typename for Map pairs
+ */
+template <typename T>
+using MapPair = typename std::pair<const std::string, std::unique_ptr<T>>;
+/**
  * Typename for iterator for Map<T>
  */
 template <typename T>
@@ -59,38 +64,34 @@ public:
 	~Map() {}
 
 	/**
-	 * Insert a value into the map
-	 * @param key Key of the entry
-	 * @param value Value of the entry
-	 * @return Iterator
+	 * Insert a value into the map.
+	 * @param key Key of the entry.
+	 * @param value Value of the entry.
+	 * @return Iterator.
 	 */
 	MapIterator<T> insert(const std::string& key, T* value)
 	{
-		std::unique_ptr<T> _ptr{value};
-		std::pair<std::string, std::unique_ptr<T>>
-			_pair{key, std::move(_ptr)};
-		auto result = MapBase<T>::insert(std::move(_pair));
+		auto result = MapBase<T>::insert(
+				MapPair<T>{key, std::unique_ptr<T>{value}});
 		if (!result.second)
 			throw std::invalid_argument("Double key: " + key);
 		return result.first;
 	}
 
 	/**
-	 * Remove and delete entry by iterator
-	 * @param iter Iterator of the entry to remove
-	 * @return True, if entry was removed
+	 * Insert a value into the map.
+	 * @param key Key of the entry.
+	 * @param pv Unique pointer to the entry.
+	 * @return Iterator.
 	 */
-	bool remove(const MapIterator<T> iter) {
-		return(MapBase<T>::erase(iter) == 1);
-	}
-
-	/**
-	 * Remove and delete entry by key
-	 * @param key Key of the entry to remove
-	 * @return True, if entry was removed
-	 */
-	bool erase(const std::string& key) {
-		return(MapBase<T>::erase(key) == 1);
+	MapIterator<T> insert2(const std::string& key,
+			std::unique_ptr<T>&& pv)
+	{
+		auto result = MapBase<T>::insert(
+				MapPair<T>{key, move(pv)});
+		if (!result.second)
+			throw std::invalid_argument("Double key: " + key);
+		return result.first;
 	}
 
 	/**
@@ -98,7 +99,7 @@ public:
 	 * @param key The key to lookup
 	 * @return pointer to value or nullptr
 	 */
-	T* find(const std::string& key) {
+	const T* findAndGet(const std::string& key) {
 		MapIterator<T> x = MapBase<T>::find(key);
 		return (x == MapBase<T>::end()) ? nullptr : x->second.get();
 	}

@@ -23,6 +23,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
 using namespace JsonX;
@@ -31,9 +32,13 @@ namespace FreeAX25 {
 
 class ClientProxy;
 
-ServerBase::ServerBase(): serverProxy{new ServerProxy(this)} {}
+ServerBase::ServerBase() {
+	cerr << "ServerBase::ServerBase()" << endl;
+}
 
-ServerBase::~ServerBase() { serverProxy.get()->kill(); }
+ServerBase::~ServerBase() {
+	cerr << "ServerBase::~ServerBase()" << endl;
+}
 
 ClientProxy&& ServerBase::onConnect(JsonXObject& parameter, ClientProxy&& downlink) {
 	throw logic_error("Unsupported service: connect");
@@ -59,8 +64,8 @@ JsonXObject&& ServerBase::onCtrl(JsonXObject& request) {
 	throw logic_error("Unsupported service: ctrl");
 }
 
-ClientProxy&& ServerBase::newClientProxy() {
-	return move(ClientProxy(serverProxy.get()));
+unique_ptr<ServerProxy> ServerBase::getServerProxy() {
+	return unique_ptr<ServerProxy>(new ServerProxy(this));
 }
 
 } /* namespace JsonX */

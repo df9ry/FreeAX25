@@ -23,14 +23,14 @@ namespace FreeAX25 {
 const std::string Setting::asString(
 		Map<Setting>& map, const std::string& key, const std::string def)
 {
-	Setting* s = map.find(key);
+	const Setting* s = map.findAndGet(key);
 	return (s != nullptr) ? s->asString() : def;
 }
 
 int Setting::asInt(
 		Map<Setting>& map, const std::string& key, const int def)
 {
-	Setting* s = map.find(key);
+	const Setting* s = map.findAndGet(key);
 	return (s != nullptr) ? s->asInt() : def;
 }
 

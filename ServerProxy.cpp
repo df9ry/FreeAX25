@@ -15,8 +15,30 @@ using namespace JsonX;
 
 namespace FreeAX25 {
 
+ServerProxy::ServerProxy():
+		m_server{shared_ptr<ServerBase>()}
+{
+}
+
+ServerProxy::ServerProxy(ServerProxy&& other)
+{
+	swap(m_server, other.m_server);
+}
+
+ServerProxy& ServerProxy::operator=(ServerProxy&& other)
+{
+	swap(m_server, other.m_server);
+	return *this;
+}
+
 ServerProxy::ServerProxy(ServerBase* server):
-		m_server{shared_ptr<ServerBase>(server)} {}
+		m_server{shared_ptr<ServerBase>(server)}
+{
+}
+
+ClientProxy* ServerProxy::getClientProxy() {
+	return new ClientProxy(this);
+}
 
 ClientProxy&& ServerProxy::connect(JsonXObject& parameter, ClientProxy&& downlink) {
 	if (!m_server.get()) throw runtime_error("Server not found");

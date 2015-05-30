@@ -19,6 +19,7 @@
 #ifndef SERVERBASE_H_
 #define SERVERBASE_H_
 
+#include "JsonXObject.h"
 #include "ClientProxy.h"
 
 #include <memory>
@@ -45,6 +46,12 @@ public:
 	 */
 	virtual ~ServerBase();
 
+	/**
+	 * Get a ServerProxy for this server.
+	 * @return Unique pointer to new ServerProxy.
+	 */
+	std::unique_ptr<ServerProxy> getServerProxy();
+
 protected:
 	virtual ClientProxy&& onConnect(JsonX::JsonXObject& parameter, ClientProxy&& downlink);
 	virtual ClientProxy&& onConnect(JsonX::JsonXObject& parameter);
@@ -52,13 +59,8 @@ protected:
 	virtual void onClose(JsonX::JsonXObject& parameter);
 	virtual void onReceive(JsonX::JsonXObject&& message, MessagePriority priority);
 	virtual JsonX::JsonXObject&& onCtrl(JsonX::JsonXObject& request);
-
-	ClientProxy&& newClientProxy();
-
-private:
-	std::shared_ptr<ServerProxy> serverProxy;
 };
 
-} /* namespace JsonX */
+} /* namespace FreeAX25 */
 
 #endif /* SERVERBASE_H_ */
