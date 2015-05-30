@@ -1,8 +1,19 @@
 /*
- * ServerProxy.cpp
- *
- *  Created on: 26.05.2015
- *      Author: tania
+    Project FreeAX25
+    Copyright (C) 2015  tania@df9ry.de
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "ServerProxy.h"
@@ -36,38 +47,56 @@ ServerProxy::ServerProxy(ServerBase* server):
 {
 }
 
-ClientProxy* ServerProxy::getClientProxy() {
-	return new ClientProxy(this);
+ServerProxy::~ServerProxy()
+{
 }
 
-ClientProxy&& ServerProxy::connect(JsonXObject& parameter, ClientProxy&& downlink) {
+unique_ptr<ClientProxy> ServerProxy::getClientProxy() {
+	return unique_ptr<ClientProxy>(new ClientProxy(this));
+}
+
+std::unique_ptr<ClientProxy> ServerProxy::connect(
+		std::unique_ptr<JsonX::JsonXValue>&& parameter,
+		std::unique_ptr<ClientProxy>&& downlink)
+{
 	if (!m_server.get()) throw runtime_error("Server not found");
-	return move(m_server.get()->onConnect(parameter, move(downlink)));
+	return m_server.get()->onConnect(move(parameter), move(downlink));
 }
 
-ClientProxy&& ServerProxy::connect(JsonXObject& parameter) {
+std::unique_ptr<ClientProxy> ServerProxy::connect(
+		std::unique_ptr<JsonX::JsonXValue>&& parameter)
+{
 	if (!m_server.get()) throw runtime_error("Server not found");
-	return move(m_server.get()->onConnect(parameter));
+	return m_server.get()->onConnect(move(parameter));
 }
 
-void ServerProxy::open(JsonXObject& parameter) {
+void ServerProxy::open(
+		std::unique_ptr<JsonX::JsonXValue>&& parameter)
+{
 	if (!m_server.get()) throw runtime_error("Server not found");
-	m_server.get()->onOpen(parameter);
+	m_server.get()->onOpen(move(parameter));
 }
 
-void ServerProxy::close(JsonXObject& parameter) {
+void ServerProxy::close(
+		std::unique_ptr<JsonX::JsonXValue>&& parameter)
+{
 	if (!m_server.get()) throw runtime_error("Server not found");
-	m_server.get()->onClose(parameter);
+	m_server.get()->onClose(move(parameter));
 }
 
-void ServerProxy::send(JsonXObject&& message, MessagePriority priority) {
+void ServerProxy::send(
+		std::unique_ptr<JsonX::JsonXValue>&& message,
+		MessagePriority priority)
+{
 	if (!m_server.get()) throw runtime_error("Server not found");
 	m_server.get()->onReceive(move(message), priority);
 }
 
-JsonXObject&& ServerProxy::ctrl(JsonXObject& request) {
+std::unique_ptr<JsonX::JsonXValue> ServerProxy::ctrl(
+		std::unique_ptr<JsonX::JsonXValue>&& request)
+{
 	if (!m_server.get()) throw runtime_error("Server not found");
-	return move(m_server.get()->onCtrl(request));
+	return m_server.get()->onCtrl(move(request));
 }
 
 void ServerProxy::kill() {

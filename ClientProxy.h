@@ -1,14 +1,25 @@
 /*
- * ClientProxy.h
- *
- *  Created on: 26.05.2015
- *      Author: tania
+    Project FreeAX25
+    Copyright (C) 2015  tania@df9ry.de
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef CLIENTPROXY_H_
 #define CLIENTPROXY_H_
 
-#include "JsonXObject.h"
+#include "JsonXValue.h"
 
 #include <memory>
 
@@ -35,20 +46,59 @@ class ClientProxy {
 public:
 
 	/**
+	 * Standard Constructor.
+	 */
+	ClientProxy();
+
+	/**
+	 * Copy constructor is deleted.
+	 * @param other Not used
+	 */
+	ClientProxy(const ClientProxy& other) = delete;
+
+	/**
+	 * Move constructor.
+	 * @param other Move source.
+	 */
+	ClientProxy(ClientProxy&& other);
+
+	/**
+	 * Copy assignment is deleted.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	ClientProxy& operator=(const ClientProxy& other) = delete;
+
+	/**
+	 * Move assignment.
+	 * @param other Source object.
+	 * @return Reference to target object.
+	 */
+	ClientProxy& operator=(ClientProxy&& other);
+
+	/**
+	 * Destructor.
+	 */
+	~ClientProxy();
+
+	/**
 	 * Connect to server for a bidirectional conversation.
 	 * @param parameter Parameter to specify connection details.
 	 *                  The server may move out parts of this parameters!
 	 * @param downlink Proxy to your downlink server.
 	 * @return Proxy to uplink.
 	 */
-	ClientProxy&& connect(JsonX::JsonXObject& parameter, ClientProxy&& downlink);
+	std::unique_ptr<ClientProxy> connect(
+			std::unique_ptr<JsonX::JsonXValue>&& parameter,
+			std::unique_ptr<ClientProxy>&& downlink);
 
 	/**
 	 * Connect to server for a bidirectional conversation.
 	 * @param downlink Proxy to your downlink server.
 	 * @return Proxy to uplink.
 	 */
-	ClientProxy&& connect(ClientProxy&& downlink);
+	std::unique_ptr<ClientProxy> connect(
+			std::unique_ptr<ClientProxy>&& downlink);
 
 	/**
 	 * Connect to server for a unidirectional conversation.
@@ -56,20 +106,21 @@ public:
 	 *                  The server may move out parts of this parameters!
 	 * @return Proxy to uplink.
 	 */
-	ClientProxy&& connect(JsonX::JsonXObject& parameter);
+	std::unique_ptr<ClientProxy> connect(
+			std::unique_ptr<JsonX::JsonXValue>&& parameter);
 
 	/**
 	 * Connect to server for a unidirectional conversation.
 	 * @return Proxy to uplink.
 	 */
-	ClientProxy&& connect();
+	std::unique_ptr<ClientProxy> connect();
 
 	/**
 	 * Start service. Do not send anything before calling this method.
 	 * @param parameter Parameter to specify start details.
 	 *                  The server may move out parts of this parameters!
 	 */
-	void open(JsonX::JsonXObject& parameter);
+	void open(std::unique_ptr<JsonX::JsonXValue>&& parameter);
 
 	/**
 	 * Start service. Do not send anything before calling this method.
@@ -81,7 +132,8 @@ public:
 	 * @param parameter Parameter to specify start details.
 	 *                  The server may move out parts of this parameters!
 	 */
-	void close(JsonX::JsonXObject& parameter);
+	void close(
+			std::unique_ptr<JsonX::JsonXValue>&& parameter);
 
 	/**
 	 * Detach from service. Do not send anything after calling this method.
@@ -93,19 +145,17 @@ public:
 	 * @param message Data to send
 	 * @param priority Message priority
 	 */
-	void send(JsonX::JsonXObject&& message, MessagePriority priority = MessagePriority::ROUTINE);
+	void send(
+			std::unique_ptr<JsonX::JsonXValue>&& message,
+			MessagePriority priority = MessagePriority::ROUTINE);
 
 	/**
 	 * Send control request synchronously to the server.
 	 * @param request The request to send
 	 * @return The response from the server
 	 */
-	JsonX::JsonXObject&& ctrl(JsonX::JsonXObject& request);
-
-	/**
-	 * Destructor.
-	 */
-	~ClientProxy();
+	std::unique_ptr<JsonX::JsonXValue> ctrl(
+			std::unique_ptr<JsonX::JsonXValue>&& request);
 
 private:
 	/**

@@ -19,7 +19,7 @@
 #ifndef SERVERBASE_H_
 #define SERVERBASE_H_
 
-#include "JsonXObject.h"
+#include "JsonXValue.h"
 #include "ClientProxy.h"
 
 #include <memory>
@@ -53,12 +53,25 @@ public:
 	std::unique_ptr<ServerProxy> getServerProxy();
 
 protected:
-	virtual ClientProxy&& onConnect(JsonX::JsonXObject& parameter, ClientProxy&& downlink);
-	virtual ClientProxy&& onConnect(JsonX::JsonXObject& parameter);
-	virtual void onOpen(JsonX::JsonXObject& parameter);
-	virtual void onClose(JsonX::JsonXObject& parameter);
-	virtual void onReceive(JsonX::JsonXObject&& message, MessagePriority priority);
-	virtual JsonX::JsonXObject&& onCtrl(JsonX::JsonXObject& request);
+	virtual std::unique_ptr<ClientProxy> onConnect(
+			std::unique_ptr<JsonX::JsonXValue>&& parameter,
+			std::unique_ptr<ClientProxy>&& downlink);
+
+	virtual std::unique_ptr<ClientProxy> onConnect(
+			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+
+	virtual void onOpen(
+			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+
+	virtual void onClose(
+			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+
+	virtual void onReceive(
+			std::unique_ptr<JsonX::JsonXValue>&& message,
+			MessagePriority priority);
+
+	virtual std::unique_ptr<JsonX::JsonXValue> onCtrl(
+			std::unique_ptr<JsonX::JsonXValue>&& request);
 };
 
 } /* namespace FreeAX25 */
