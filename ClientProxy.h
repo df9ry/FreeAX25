@@ -88,17 +88,14 @@ public:
 	 * @param downlink Proxy to your downlink server.
 	 * @return Proxy to uplink.
 	 */
-	std::unique_ptr<ClientProxy> connect(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter,
-			std::unique_ptr<ClientProxy>&& downlink);
+	ClientProxy connect(JsonX::JsonXValue&& parameter, ClientProxy&& downlink);
 
 	/**
 	 * Connect to server for a bidirectional conversation.
 	 * @param downlink Proxy to your downlink server.
 	 * @return Proxy to uplink.
 	 */
-	std::unique_ptr<ClientProxy> connect(
-			std::unique_ptr<ClientProxy>&& downlink);
+	ClientProxy connect(ClientProxy&& downlink);
 
 	/**
 	 * Connect to server for a unidirectional conversation.
@@ -106,21 +103,20 @@ public:
 	 *                  The server may move out parts of this parameters!
 	 * @return Proxy to uplink.
 	 */
-	std::unique_ptr<ClientProxy> connect(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+	ClientProxy connect(JsonX::JsonXValue&& parameter);
 
 	/**
 	 * Connect to server for a unidirectional conversation.
 	 * @return Proxy to uplink.
 	 */
-	std::unique_ptr<ClientProxy> connect();
+	ClientProxy connect();
 
 	/**
 	 * Start service. Do not send anything before calling this method.
 	 * @param parameter Parameter to specify start details.
 	 *                  The server may move out parts of this parameters!
 	 */
-	void open(std::unique_ptr<JsonX::JsonXValue>&& parameter);
+	void open(JsonX::JsonXValue&& parameter);
 
 	/**
 	 * Start service. Do not send anything before calling this method.
@@ -132,8 +128,7 @@ public:
 	 * @param parameter Parameter to specify start details.
 	 *                  The server may move out parts of this parameters!
 	 */
-	void close(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+	void close(JsonX::JsonXValue&& parameter);
 
 	/**
 	 * Detach from service. Do not send anything after calling this method.
@@ -145,17 +140,14 @@ public:
 	 * @param message Data to send
 	 * @param priority Message priority
 	 */
-	void send(
-			std::unique_ptr<JsonX::JsonXValue>&& message,
-			MessagePriority priority = MessagePriority::ROUTINE);
+	void send(JsonX::JsonXValue&& message, MessagePriority priority = MessagePriority::ROUTINE);
 
 	/**
 	 * Send control request synchronously to the server.
 	 * @param request The request to send
 	 * @return The response from the server
 	 */
-	std::unique_ptr<JsonX::JsonXValue> ctrl(
-			std::unique_ptr<JsonX::JsonXValue>&& request);
+	JsonX::JsonXValue ctrl(JsonX::JsonXValue&& request);
 
 private:
 	/**

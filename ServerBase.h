@@ -50,28 +50,20 @@ public:
 	 * Get a ServerProxy for this server.
 	 * @return Unique pointer to new ServerProxy.
 	 */
-	std::unique_ptr<ServerProxy> getServerProxy();
+	ServerProxy getServerProxy();
 
 protected:
-	virtual std::unique_ptr<ClientProxy> onConnect(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter,
-			std::unique_ptr<ClientProxy>&& downlink);
+	virtual ClientProxy onConnect(JsonX::JsonXValue&& parameter, ClientProxy&& downlink);
 
-	virtual std::unique_ptr<ClientProxy> onConnect(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+	virtual ClientProxy onConnect(JsonX::JsonXValue&& parameter);
 
-	virtual void onOpen(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+	virtual void onOpen(JsonX::JsonXValue&& parameter);
 
-	virtual void onClose(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+	virtual void onClose(JsonX::JsonXValue&& parameter);
 
-	virtual void onReceive(
-			std::unique_ptr<JsonX::JsonXValue>&& message,
-			MessagePriority priority);
+	virtual void onReceive(JsonX::JsonXValue&& message, MessagePriority priority);
 
-	virtual std::unique_ptr<JsonX::JsonXValue> onCtrl(
-			std::unique_ptr<JsonX::JsonXValue>&& request);
+	virtual JsonX::JsonXValue onCtrl(JsonX::JsonXValue&& request);
 };
 
 } /* namespace FreeAX25 */

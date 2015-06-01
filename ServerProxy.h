@@ -73,7 +73,7 @@ public:
 	 * Get a ClientProxy for the server.
 	 * @return Unique pointer to ClientProxy.
 	 */
-	std::unique_ptr<ClientProxy> getClientProxy();
+	ClientProxy getClientProxy();
 
 	/**
 	 * Destructor.
@@ -83,25 +83,17 @@ public:
 private:
 	ServerProxy(ServerBase* server);
 
-	std::unique_ptr<ClientProxy> connect(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter,
-			std::unique_ptr<ClientProxy>&& downlink);
+	ClientProxy connect(JsonX::JsonXValue&& parameter, ClientProxy&& downlink);
 
-	std::unique_ptr<ClientProxy> connect(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+	ClientProxy connect(JsonX::JsonXValue&& parameter);
 
-	void open(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+	void open(JsonX::JsonXValue&& parameter);
 
-	void close(
-			std::unique_ptr<JsonX::JsonXValue>&& parameter);
+	void close(JsonX::JsonXValue&& parameter);
 
-	void send(
-			std::unique_ptr<JsonX::JsonXValue>&& message,
-			MessagePriority priority);
+	void send(JsonX::JsonXValue&& message, MessagePriority priority);
 
-	std::unique_ptr<JsonX::JsonXValue> ctrl(
-			std::unique_ptr<JsonX::JsonXValue>&& request);
+	JsonX::JsonXValue ctrl(JsonX::JsonXValue&& request);
 
 	void kill();
 

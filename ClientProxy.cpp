@@ -57,86 +57,78 @@ ClientProxy::ClientProxy(ServerProxy* serverProxy):
 ClientProxy::~ClientProxy() {
 }
 
-std::unique_ptr<ClientProxy> ClientProxy::connect(
-		std::unique_ptr<JsonX::JsonXValue>&& parameter,
-		std::unique_ptr<ClientProxy>&& downlink)
-{
+ClientProxy ClientProxy::connect(JsonX::JsonXValue&& parameter, ClientProxy&& downlink) {
 	if (m_state != ClientProxyState::NEW)
 		throw logic_error("Invalid state in ClientProxy::open");
-	unique_ptr<ClientProxy> result{m_serverProxy.get()->connect(move(parameter), move(downlink))};
+	if (!m_serverProxy) return ClientProxy{};
+	ClientProxy result{m_serverProxy.get()->connect(move(parameter), move(downlink))};
 	m_state = ClientProxyState::INIT;
 	return result;
 }
 
-unique_ptr<ClientProxy> ClientProxy::connect(
-		unique_ptr<ClientProxy>&& downlink)
-{
+ClientProxy ClientProxy::connect(ClientProxy&& downlink) {
 	if (m_state != ClientProxyState::NEW)
 		throw logic_error("Invalid state in ClientProxy::open");
-	unique_ptr<ClientProxy> result{m_serverProxy.get()->connect(unique_ptr<JsonXValue>{}, move(downlink))};
+	if (!m_serverProxy) return ClientProxy{};
+	ClientProxy result{m_serverProxy.get()->connect(JsonXValue{}, move(downlink))};
 	m_state = ClientProxyState::INIT;
 	return result;
 }
 
-unique_ptr<ClientProxy> ClientProxy::connect(
-		unique_ptr<JsonXValue>&& parameter)
-{
+ClientProxy ClientProxy::connect(JsonXValue&& parameter) {
 	if (m_state != ClientProxyState::NEW)
 		throw logic_error("Invalid state in ClientProxy::open");
-	unique_ptr<ClientProxy> result{m_serverProxy.get()->connect(move(parameter))};
+	if (!m_serverProxy) return ClientProxy{};
+	ClientProxy result{m_serverProxy.get()->connect(move(parameter))};
 	m_state = ClientProxyState::INIT;
 	return move(result);
 }
 
-unique_ptr<ClientProxy> ClientProxy::connect()
-{
+ClientProxy ClientProxy::connect() {
 	if (m_state != ClientProxyState::NEW)
 		throw logic_error("Invalid state in ClientProxy::open");
-	unique_ptr<ClientProxy> result{m_serverProxy.get()->connect(unique_ptr<JsonXValue>{})};
+	if (!m_serverProxy) return ClientProxy{};
+	ClientProxy result{m_serverProxy.get()->connect(JsonXValue{})};
 	m_state = ClientProxyState::INIT;
 	return result;
 }
 
-void ClientProxy::open(unique_ptr<JsonXValue>&& parameter)
-{
+void ClientProxy::open(JsonXValue&& parameter) {
 	if (m_state != ClientProxyState::NEW)
 		throw logic_error("Invalid state in ClientProxy::open");
+	if (!m_serverProxy) return;
 	m_serverProxy.get()->open(move(parameter));
 	m_state = ClientProxyState::OPEN;
 }
 
-void ClientProxy::open()
-{
+void ClientProxy::open() {
 	if (m_state != ClientProxyState::NEW)
 		throw logic_error("Invalid state in ClientProxy::open");
-	m_serverProxy.get()->open(unique_ptr<JsonXValue>{});
+	m_serverProxy.get()->open(JsonXValue{});
 	m_state = ClientProxyState::OPEN;
 }
 
-void ClientProxy::close(unique_ptr<JsonXValue>&& parameter)
-{
+void ClientProxy::close(JsonXValue&& parameter) {
+	if (!m_serverProxy) return;
 	m_serverProxy.get()->close(move(parameter));
 	m_state = ClientProxyState::CLOSED;
 }
 
-void ClientProxy::close()
-{
-	m_serverProxy.get()->close(unique_ptr<JsonXValue>{});
+void ClientProxy::close() {
+	if (!m_serverProxy) return;
+	m_serverProxy.get()->close(JsonXValue{});
 	m_state = ClientProxyState::CLOSED;
 }
 
-void ClientProxy::send(
-		unique_ptr<JsonXValue>&& message,
-		MessagePriority priority)
-{
+void ClientProxy::send(JsonXValue&& message, MessagePriority priority) {
 	if (m_state != ClientProxyState::OPEN)
 		throw logic_error("Invalid state in ClientProxy::send");
+	if (!m_serverProxy) return;
 	m_serverProxy.get()->send(move(message), priority);
 }
 
-unique_ptr<JsonXValue> ClientProxy::ctrl(
-		unique_ptr<JsonXValue>&& request)
-{
+JsonXValue ClientProxy::ctrl(JsonXValue&& request) {
+	if (!m_serverProxy) return JsonXValue{};
 	return m_serverProxy.get()->ctrl(move(request));
 }
 

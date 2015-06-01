@@ -51,50 +51,36 @@ ServerProxy::~ServerProxy()
 {
 }
 
-unique_ptr<ClientProxy> ServerProxy::getClientProxy() {
-	return unique_ptr<ClientProxy>(new ClientProxy(this));
+ClientProxy ServerProxy::getClientProxy() {
+	return ClientProxy(this);
 }
 
-std::unique_ptr<ClientProxy> ServerProxy::connect(
-		std::unique_ptr<JsonX::JsonXValue>&& parameter,
-		std::unique_ptr<ClientProxy>&& downlink)
-{
+ClientProxy ServerProxy::connect(JsonX::JsonXValue&& parameter, ClientProxy&& downlink) {
 	if (!m_server.get()) throw runtime_error("Server not found");
 	return m_server.get()->onConnect(move(parameter), move(downlink));
 }
 
-std::unique_ptr<ClientProxy> ServerProxy::connect(
-		std::unique_ptr<JsonX::JsonXValue>&& parameter)
-{
+ClientProxy ServerProxy::connect(JsonX::JsonXValue&& parameter) {
 	if (!m_server.get()) throw runtime_error("Server not found");
 	return m_server.get()->onConnect(move(parameter));
 }
 
-void ServerProxy::open(
-		std::unique_ptr<JsonX::JsonXValue>&& parameter)
-{
+void ServerProxy::open(JsonX::JsonXValue&& parameter) {
 	if (!m_server.get()) throw runtime_error("Server not found");
 	m_server.get()->onOpen(move(parameter));
 }
 
-void ServerProxy::close(
-		std::unique_ptr<JsonX::JsonXValue>&& parameter)
-{
+void ServerProxy::close(JsonX::JsonXValue&& parameter) {
 	if (!m_server.get()) throw runtime_error("Server not found");
 	m_server.get()->onClose(move(parameter));
 }
 
-void ServerProxy::send(
-		std::unique_ptr<JsonX::JsonXValue>&& message,
-		MessagePriority priority)
-{
+void ServerProxy::send(JsonX::JsonXValue&& message, MessagePriority priority) {
 	if (!m_server.get()) throw runtime_error("Server not found");
 	m_server.get()->onReceive(move(message), priority);
 }
 
-std::unique_ptr<JsonX::JsonXValue> ServerProxy::ctrl(
-		std::unique_ptr<JsonX::JsonXValue>&& request)
-{
+JsonX::JsonXValue ServerProxy::ctrl(JsonX::JsonXValue&& request) {
 	if (!m_server.get()) throw runtime_error("Server not found");
 	return m_server.get()->onCtrl(move(request));
 }

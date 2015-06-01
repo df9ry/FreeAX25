@@ -40,46 +40,32 @@ ServerBase::~ServerBase() {
 	cerr << "ServerBase::~ServerBase()" << endl;
 }
 
-std::unique_ptr<ClientProxy> ServerBase::onConnect(
-		std::unique_ptr<JsonX::JsonXValue>&& parameter,
-		std::unique_ptr<ClientProxy>&& downlink)
-{
+ClientProxy ServerBase::onConnect(JsonX::JsonXValue&& parameter, ClientProxy&& downlink) {
 	throw logic_error("Unsupported service: connect");
 }
 
-std::unique_ptr<ClientProxy> ServerBase::onConnect(
-		std::unique_ptr<JsonX::JsonXValue>&& parameter)
-{
+ClientProxy ServerBase::onConnect(JsonX::JsonXValue&& parameter) {
 	throw logic_error("Unsupported service: connect");
 }
 
-void ServerBase::onOpen(
-		std::unique_ptr<JsonX::JsonXValue>&& parameter)
-{
+void ServerBase::onOpen(JsonX::JsonXValue&& parameter) {
 	throw logic_error("Unsupported service: open");
 }
 
-void ServerBase::onClose(
-		std::unique_ptr<JsonX::JsonXValue>&& parameter)
-{
+void ServerBase::onClose(JsonX::JsonXValue&& parameter) {
 	throw logic_error("Unsupported service: close");
 }
 
-void ServerBase::onReceive(
-		std::unique_ptr<JsonX::JsonXValue>&& message,
-		MessagePriority priority)
-{
+void ServerBase::onReceive(JsonX::JsonXValue&& message, MessagePriority priority) {
 	throw logic_error("Unsupported service: send");
 }
 
-std::unique_ptr<JsonX::JsonXValue> ServerBase::onCtrl(
-		std::unique_ptr<JsonX::JsonXValue>&& request)
-{
+JsonX::JsonXValue ServerBase::onCtrl(JsonX::JsonXValue&& request) {
 	throw logic_error("Unsupported service: control");
 }
 
-unique_ptr<ServerProxy> ServerBase::getServerProxy() {
-	return unique_ptr<ServerProxy>(new ServerProxy(this));
+ServerProxy ServerBase::getServerProxy() {
+	return ServerProxy(this);
 }
 
 } /* namespace JsonX */
