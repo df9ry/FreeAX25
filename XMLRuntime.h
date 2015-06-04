@@ -20,7 +20,9 @@
 #define XMLRUNTIME_H_
 
 #include "Environment.h"
-#include "Map.h"
+#include "ServerEndPoint.h"
+#include "ClientEndPoint.h"
+#include "UniquePointerDict"
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/dom/DOM.hpp>
@@ -65,17 +67,17 @@ private:
     void readSettings(
     		const std::string& id,
     		XERCES_CPP_NAMESPACE::DOMElement* element,
-    		FreeAX25::Map<FreeAX25::Setting>& settings);
+    		FreeAX25::UniquePointerDict<FreeAX25::Setting>& settings);
 
     void readPlugins(
     		const std::string& id,
 			XERCES_CPP_NAMESPACE::DOMElement* element,
-			FreeAX25::Map<FreeAX25::Plugin>& plugins);
+			FreeAX25::UniquePointerDict<FreeAX25::Plugin>& plugins);
 
     void readInstances(
     		const std::string& id,
 			XERCES_CPP_NAMESPACE::DOMElement* element,
-			FreeAX25::Map<FreeAX25::Instance>& instances);
+			FreeAX25::UniquePointerDict<FreeAX25::Instance>& instances);
 };
 
 // ---------------------------------------------------------------------------

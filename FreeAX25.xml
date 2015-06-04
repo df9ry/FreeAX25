@@ -44,6 +44,15 @@
 			</Settings>
 		</Plugin>
 		
+		<!-- Builtin null object -->
+		<Plugin name="_NULL">
+			<Instances>
+				<Instance name="null">
+					<ServerEndPoint name="downlink" url="channel:null"/>
+				</Instance>
+			</Instances>
+		</Plugin>
+		
 	</Plugins>
 	
 </Configuration>

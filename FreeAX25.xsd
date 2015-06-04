@@ -24,8 +24,19 @@
         elementFormDefault="qualified">
     
     <!-- The root element always have to be a Configuration -->    
-    <xs:element name="Configuration" type="tp:ConfigurationType"/>
-       
+    <xs:element name="Configuration" type="tp:ConfigurationType">
+		<xs:key name="ServerEndPointUrlKey">
+			<xs:selector
+				xpath="tp:Plugins/tp:Plugin/tp:Instances/tp:Instance/tp:ServerEndPoint"/>
+			<xs:field xpath="@url"/>
+		</xs:key>  			
+  			<xs:keyref name="ServerEndPointUrlRef" refer="tp:ServerEndPointUrlKey">
+			<xs:selector
+				xpath="tp:Plugins/tp:Plugin/tp:Instances/tp:Instance/tp:ClientEndPoint"/>
+			<xs:field xpath="@url"/>
+		</xs:keyref>  				
+    </xs:element>
+
     <!-- A Configuration has Settings and Plugins -->   
     <xs:complexType name="ConfigurationType">
     	<xs:sequence>
@@ -76,6 +87,14 @@
     				<xs:selector xpath="tp:Instance"/>
     				<xs:field xpath="@name"/>
     			</xs:unique>
+    			<xs:unique name="ServerEndpointUnique">
+    				<xs:selector xpath="tp:ServerEndPoint"/>
+    				<xs:field xpath="@name"/>
+    			</xs:unique>
+    			<xs:unique name="ClientEndpointUnique">
+    				<xs:selector xpath="tp:ClientEndPoint"/>
+    				<xs:field xpath="@name"/>
+    			</xs:unique>
     		</xs:element>
     	</xs:sequence>
 		<xs:attribute name="name" type="xs:Name" use="required"/>
@@ -114,6 +133,10 @@
 	-->    
     <xs:complexType name="InstanceType">
     	<xs:sequence>
+    		<xs:element name="ServerEndPoint" type="tp:ServerEndPointType"
+    			minOccurs="0" maxOccurs="unbounded"/>
+    		<xs:element name="ClientEndPoint" type="tp:ClientEndPointType"
+    			minOccurs="0" maxOccurs="unbounded"/>
     		<xs:element name="Settings" type="tp:SettingsType"
     			minOccurs="0" maxOccurs="1">
     			<xs:unique name="InstanceSettingsUnique">
@@ -123,6 +146,24 @@
     		</xs:element>
     	</xs:sequence>
 		<xs:attribute name="name" type="xs:Name" use="required"/>
+    </xs:complexType>
+    
+    <!--
+    	A ServerEndpoint defines a communication endpoint where ClientEndPoints
+        can connect.
+    -->
+    <xs:complexType name="ServerEndPointType">
+		<xs:attribute name="name" type="xs:Name" use="required"/>
+		<xs:attribute name="url" type="xs:anyURI" use="required"/>
+    </xs:complexType>
+    
+    <!--
+    	A ClientEndpoint defines a communication endpoint that connects to
+        ServerEndpoints.
+    -->
+    <xs:complexType name="ClientEndPointType">
+		<xs:attribute name="name" type="xs:Name" use="required"/>
+		<xs:attribute name="url" type="xs:anyURI" use="required"/>
     </xs:complexType>
     
 </xs:schema>

@@ -16,22 +16,51 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Setting.h"
+#ifndef SERVERENDPOINT_H_
+#define SERVERENDPOINT_H_
 
 namespace FreeAX25 {
 
-const std::string Setting::asString(
-		Map<Setting>& map, const std::string& key, const std::string def)
-{
-	const Setting* s = map.findAndGet(key);
-	return (s != nullptr) ? s->asString() : def;
-}
+#include <string>
 
-int Setting::asInt(
-		Map<Setting>& map, const std::string& key, const int def)
-{
-	const Setting* s = map.findAndGet(key);
-	return (s != nullptr) ? s->asInt() : def;
-}
+class ServerEndPoint {
+public:
+	/**
+	 * Default constructor.
+	 */
+	ServerEndPoint():
+		m_name{""}, m_url{""} {}
+
+	/**
+	 * Constructor
+	 * @param name Name of this ServerEndPoint
+	 * @param e Global environment
+	 */
+	ServerEndPoint(const std::string& name, const std::string& url, Environment* e):
+		m_name{name}, m_url{url} {};
+
+	/**
+	 * Destructor
+	 */
+	~ServerEndPoint() {};
+
+	/**
+	 * Get the setting name
+	 * @return setting name
+	 */
+	const std::string& getName() const { return m_name; }
+
+	/**
+	 * Get the setting name
+	 * @return setting name
+	 */
+	const std::string& getUrl() const { return m_url; }
+
+private:
+	const std::string m_name;
+	const std::string m_url;
+};
 
 } /* namespace FreeAX25 */
+
+#endif /* SERVERENDPOINT_H_ */

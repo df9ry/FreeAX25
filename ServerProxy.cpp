@@ -27,8 +27,19 @@ using namespace JsonX;
 namespace FreeAX25 {
 
 ServerProxy::ServerProxy():
-		m_server{shared_ptr<ServerBase>()}
+		m_server{shared_ptr<ServerBase>(nullptr)}
 {
+}
+
+ServerProxy::ServerProxy(const ServerProxy& other):
+		m_server{other.m_server}
+{
+}
+
+ServerProxy& ServerProxy::operator=(const ServerProxy& other):
+				m_server{other.m_server}
+{
+	return *this;
 }
 
 ServerProxy::ServerProxy(ServerProxy&& other)
@@ -45,47 +56,43 @@ ServerProxy& ServerProxy::operator=(ServerProxy&& other)
 ServerProxy::ServerProxy(ServerBase* server):
 		m_server{shared_ptr<ServerBase>(server)}
 {
+	cerr << "ServerProxy::ServerProxy for server: " << (uint64_t)server <<
+			", uc=" << m_server.use_count() << endl;
 }
 
 ServerProxy::~ServerProxy()
 {
+	cerr << "ServerProxy::~ServerProxy for server: " << (uint64_t)m_server.get() <<
+			", uc=" << m_server.use_count() << endl;
 }
 
-ClientProxy ServerProxy::getClientProxy() {
-	return ClientProxy(this);
-}
-
-ClientProxy ServerProxy::connect(JsonX::JsonXValue&& parameter, ClientProxy&& downlink) {
-	if (!m_server.get()) throw runtime_error("Server not found");
+ServerProxy ServerProxy::connect(JsonX::JsonXValue&& parameter, ServerProxy&& downlink) {
+	if (!m_server.get()) throw runtime_error("Server disconnected");
 	return m_server.get()->onConnect(move(parameter), move(downlink));
 }
 
-ClientProxy ServerProxy::connect(JsonX::JsonXValue&& parameter) {
-	if (!m_server.get()) throw runtime_error("Server not found");
-	return m_server.get()->onConnect(move(parameter));
-}
-
 void ServerProxy::open(JsonX::JsonXValue&& parameter) {
-	if (!m_server.get()) throw runtime_error("Server not found");
+	if (!m_server.get()) throw runtime_error("Server disconnected");
 	m_server.get()->onOpen(move(parameter));
 }
 
 void ServerProxy::close(JsonX::JsonXValue&& parameter) {
-	if (!m_server.get()) throw runtime_error("Server not found");
+	if (!m_server.get()) throw runtime_error("Server disconnected");
 	m_server.get()->onClose(move(parameter));
+	m_server.reset();
 }
 
 void ServerProxy::send(JsonX::JsonXValue&& message, MessagePriority priority) {
-	if (!m_server.get()) throw runtime_error("Server not found");
+	if (!m_server.get()) throw runtime_error("Server disconnected");
 	m_server.get()->onReceive(move(message), priority);
 }
 
 JsonX::JsonXValue ServerProxy::ctrl(JsonX::JsonXValue&& request) {
-	if (!m_server.get()) throw runtime_error("Server not found");
+	if (!m_server.get()) throw runtime_error("Server disconnected");
 	return m_server.get()->onCtrl(move(request));
 }
 
-void ServerProxy::kill() {
+void ServerProxy::reset() {
 	m_server.reset();
 }
 

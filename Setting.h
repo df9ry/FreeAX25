@@ -19,9 +19,10 @@
 #ifndef SETTING_H_
 #define SETTING_H_
 
-#include "Map.h"
+#include "UniquePointerDict"
 
 #include <string>
+#include <stdexcept>
 
 namespace FreeAX25 {
 
@@ -29,6 +30,11 @@ class Environment;
 
 class Setting {
 public:
+
+	/**
+	 * Standard constructor.
+	 */
+	Setting(): m_name{""}, m_value{""}, m_environment{nullptr} {};
 
 	/**
 	 * Constructor
@@ -41,30 +47,25 @@ public:
 	/**
 	 * Destructor
 	 */
-	~Setting() {};
+	~Setting() {}
+
+	/**
+	 * Test if this Setting is set.
+	 * @return If Setting is set.
+	 */
+	bool isEmpty() const noexcept { return m_environment; }
 
 	/**
 	 * Get the setting name
 	 * @return setting name
 	 */
-	const std::string& getName() const { return m_name; }
+	const std::string& getName() const noexcept { return m_name; }
 
 	/**
 	 * Get the setting value
 	 * @return setting value
 	 */
-	const std::string& asString() const { return m_value; }
-
-	/**
-	 * Find string value from settings map
-	 * @param map The map to lookup
-	 * @param key The value key
-	 * @param def The default value
-	 * @return string value
-	 */
-	static const std::string asString(
-			Map<Setting>& map, const std::string& key,
-			const std::string def="");
+	const std::string& asString() const noexcept { return m_value; }
 
 	/**
 	 * Get value as integer
@@ -72,15 +73,74 @@ public:
 	 */
 	int asInt() const { return std::stoi(m_value); }
 
+	const bool asBool() const {
+		if (m_value == "true") return true;
+		if (m_value == "false") return false;
+		throw std::invalid_argument("Invalid boolean value: " + m_value);
+	}
+
 	/**
-	 * Find integer value from settings map
-	 * @param map The map to lookup
-	 * @param key The value key
-	 * @param def The default value
-	 * @return int value
+	 * Get value as string.
 	 */
-	static int asInt(Map<Setting>& map,
-			const std::string& key, int def=0);
+	explicit operator std::string() const noexcept { return asString(); }
+
+	/**
+	 * Get value as int.
+	 */
+	explicit operator int() const { return asInt(); }
+
+	/**
+	 * Get value as boolean.
+	 */
+	explicit operator bool() const { return asBool(); }
+
+	/**
+	 * Helper function to retrieve values.
+	 * @param dict The dictionary to look in.
+	 * @param key The key to look for.
+	 * @param def Default value, if value is not found.
+	 * @return Value or default value, if key is not found.
+	 */
+	static std::string asString(
+			const UniquePointerDict<Setting>& dict,
+			const std::string& key,
+			const std::string& def = "")
+	{
+		const Setting& setting{dict.findEntryConst(key)};
+		return setting.isEmpty() ? def : setting.asString();
+	}
+
+	/**
+	 * Helper function to retrieve values.
+	 * @param dict The dictionary to look in.
+	 * @param key The key to look for.
+	 * @param def Default value, if value is not found.
+	 * @return Value or default value, if key is not found.
+	 */
+	static int asInt(
+			const UniquePointerDict<Setting>& dict,
+			const std::string& key,
+			int def = -1)
+	{
+		const Setting& setting{dict.findEntryConst(key)};
+		return setting.isEmpty() ? def : setting.asInt();
+	}
+
+	/**
+	 * Helper function to retrieve values.
+	 * @param dict The dictionary to look in.
+	 * @param key The key to look for.
+	 * @param def Default value, if value is not found.
+	 * @return Value or default value, if key is not found.
+	 */
+	static bool asBool(
+			const UniquePointerDict<Setting>& dict,
+			const std::string& key,
+			bool def = false)
+	{
+		const Setting& setting{dict.findEntryConst(key)};
+		return setting.isEmpty() ? def : setting.asBool();
+	}
 
 private:
 	const std::string m_name;

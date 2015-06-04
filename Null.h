@@ -16,41 +16,57 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SERVERBASE_H_
-#define SERVERBASE_H_
 
-#include "JsonXValue.h"
-#include "ServerProxy.h"
+#ifndef NULL_H_
+#define NULL_H_
 
-#include <memory>
+#include "ServerBase.h"
 
 namespace FreeAX25 {
 
-class ServerProxy;
+class Environment;
+class Plugin;
 
 /**
- * All servers have to derive from this class
+ * Plugin initialize.
+ * @param e The environment struct
+ * @param p The plugin struct
  */
-class ServerBase {
-	friend class ServerProxy;
+void initNull(Environment* e, Plugin* p);
 
+/**
+ * Plugin start.
+ */
+void startNull();
+
+/**
+ * This is a dummy class that throws away everything it receives
+ * and transmit nothing at all. Good for testing and development.
+ */
+class Null: public ServerBase {
 public:
 
 	/**
-	 * Constructor.
+	 * Constructor
+	 * @param e Global environment
 	 */
-	ServerBase();
+	Null(Environment* e);
 
 	/**
-	 * Destructor.
+	 * Destructor
 	 */
-	virtual ~ServerBase();
+	~Null();
 
 	/**
-	 * Get a ServerProxy for this server.
-	 * @return ServerProxy for this server.
+	 * Initialize the Null
+	 * @param p Plugin data structure
 	 */
-	ServerProxy getServerProxy();
+	void init(Plugin* p);
+
+	/**
+	 * Start the Null
+	 */
+	void start();
 
 protected:
 	virtual ServerProxy onConnect(JsonX::JsonXValue&& parameter, ServerProxy&& downlink);
@@ -64,9 +80,9 @@ protected:
 	virtual JsonX::JsonXValue onCtrl(JsonX::JsonXValue&& request);
 
 private:
-	ServerProxy m_proxy;
+	Environment* m_environment;
 };
 
 } /* namespace FreeAX25 */
 
-#endif /* SERVERBASE_H_ */
+#endif /* NULL_H_ */

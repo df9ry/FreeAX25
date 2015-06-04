@@ -19,12 +19,19 @@
 #ifndef SERVERPROXY_H_
 #define SERVERPROXY_H_
 
-#include "ClientProxy.h"
 #include "JsonXValue.h"
 
 #include <memory>
 
 namespace FreeAX25 {
+
+/**
+ * Message priority.
+ */
+enum class MessagePriority {
+	ROUTINE,//!< ROUTINE  Routine delivery
+	PRIORITY//!< PRIORITY Express delivery
+};
 
 class ServerBase;
 
@@ -35,7 +42,6 @@ class ServerBase;
  */
 class ServerProxy {
 	friend class ServerBase;
-	friend class ClientProxy;
 
 public:
 	/**
@@ -44,60 +50,136 @@ public:
 	ServerProxy();
 
 	/**
-	 * Copy constructor is deleted.
-	 * @param other Not used
+	 * Copy constructor.
+	 * @param other The Server proxy to copy from.
 	 */
-	ServerProxy(const ServerProxy& other) = delete;
+	ServerProxy(const ServerProxy& other);
+
+	/**
+	 * Copy assignment.
+	 * @param other The ServerProxy to copy from.
+	 * @return Copied ServerProxy.
+	 */
+	ServerProxy& operator=(const ServerProxy& other);
 
 	/**
 	 * Move constructor.
-	 * @param other Move source.
+	 * @param other The ServerProxy to move from.
 	 */
 	ServerProxy(ServerProxy&& other);
 
 	/**
-	 * Copy assignment is deleted.
-	 * @param other Not used.
-	 * @return Not used.
-	 */
-	ServerProxy& operator=(const ServerProxy& other) = delete;
-
-	/**
 	 * Move assignment.
-	 * @param other Source object.
-	 * @return Reference to target object.
+	 * @param other The ServerProxy to move from.
+	 * @return Moved ServerProxy.
 	 */
 	ServerProxy& operator=(ServerProxy&& other);
 
 	/**
-	 * Get a ClientProxy for the server.
-	 * @return Unique pointer to ClientProxy.
+	 * Test if the server proxy is set.
 	 */
-	ClientProxy getClientProxy();
+	explicit operator bool() const noexcept { return m_server.get(); }
 
 	/**
 	 * Destructor.
 	 */
 	~ServerProxy();
 
-private:
-	ServerProxy(ServerBase* server);
+	/**
+	 * Connect to the server.
+	 * @param parameter Parameter for connect.
+	 * @param downlink ServerProxy for downlink.
+	 * @return ServerProxy. This is not necessary a proxy to the same server where
+	 *         this call is placed on. The target server may return a server dedicated
+	 *         for this client directly.
+	 */
+	ServerProxy connect(JsonX::JsonXValue&& parameter, ServerProxy&& downlink);
 
-	ClientProxy connect(JsonX::JsonXValue&& parameter, ClientProxy&& downlink);
+	/**
+	 * Connect to the server.
+	 * @param downlink ServerProxy for downlink.
+	 * @return ServerProxy. This is not necessary a proxy to the same server where
+	 *         this call is placed on. The target server may return a server dedicated
+	 *         for this client directly.
+	 */
+	ServerProxy connect(ServerProxy&& downlink) {
+		return connect(JsonX::JsonXValue(), std::move(downlink));
+	}
 
-	ClientProxy connect(JsonX::JsonXValue&& parameter);
+	/**
+	 * Connect to the server.
+	 * @param parameter Parameter for connect.
+	 * @return ServerProxy. This is not necessary a proxy to the same server where
+	 *         this call is placed on. The target server may return a server dedicated
+	 *         for this client directly.
+	 */
+	ServerProxy connect(JsonX::JsonXValue&& parameter) {
+		return connect(std::move(parameter), ServerProxy());
+	}
 
+	/**
+	 * Connect to the server.
+	 * @param parameter Parameter for connect.
+	 * @return ServerProxy. This is not necessary a proxy to the same server where
+	 *         this call is placed on. The target server may return a server dedicated
+	 *         for this client directly.
+	 */
+	ServerProxy connect() {
+		return connect(JsonX::JsonXValue(), ServerProxy());
+	}
+
+	/**
+	 * Open connection to server. This should be the first call to the server after
+	 * a connect.
+	 * @param parameter Parameter for open.
+	 */
 	void open(JsonX::JsonXValue&& parameter);
 
+	/**
+	 * Open connection to server. This should be the first call to the server after
+	 * a connect.
+	 */
+	void open() {
+		open (JsonX::JsonXValue());
+	}
+
+	/**
+	 * Close connection to server. This should be the last call to this server.
+	 * @param parameter Parameter for close.
+	 */
 	void close(JsonX::JsonXValue&& parameter);
 
-	void send(JsonX::JsonXValue&& message, MessagePriority priority);
+	/**
+	 * Close connection to server. This should be the last call to this server.
+	 */
+	void close() {
+		close(JsonX::JsonXValue());
+	}
 
+	/**
+	 * Send a message to the server.
+	 * @param message Message to send.
+	 * @param priority Message priority.
+	 */
+	void send(JsonX::JsonXValue&& message, MessagePriority priority = MessagePriority::ROUTINE);
+
+	/**
+	 * Send a request to the server.
+	 * @param request Request to send.
+	 * @return Response from server.
+	 */
 	JsonX::JsonXValue ctrl(JsonX::JsonXValue&& request);
 
-	void kill();
+	/**
+	 * Get numerical address of the underlying server. For debugging purposes.
+	 * @return Numerical address of the underlying server.
+	 */
+	uint64_t serverAddr() const { return (uint64_t)m_server.get(); }
 
-	std::shared_ptr<ServerBase> m_server;
+private:
+	ServerProxy(ServerBase* server);
+	void reset();
+	::std::shared_ptr<ServerBase> m_server;
 };
 
 } // end namespace FreeAX25 //

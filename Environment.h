@@ -1,5 +1,5 @@
 /*
-    Project FreeAX25
+    Project FreeAX2570
     Copyright (C) 2015  tania@df9ry.de
 
     This program is free software: you can redistribute it and/or modify
@@ -21,9 +21,10 @@
 
 #include "Logger.h"
 #include "TimerManager.h"
+#include "Null.h"
 #include "Configuration.h"
-
-#include <memory>
+#include "ServerProxy.h"
+#include "SharedPointerDict"
 
 namespace FreeAX25 {
 
@@ -33,7 +34,14 @@ namespace FreeAX25 {
  */
 class Environment {
 public:
+	/**
+	 * Constructor.
+	 */
 	Environment();
+
+	/**
+	 * Destructor.
+	 */
 	~Environment();
 
 	/**
@@ -92,10 +100,28 @@ public:
 		return m_configuration.get();
 	}
 
+	/**
+	 * Register a server proxy.
+	 * @param url URL for registration.
+	 * @param sp ServerProxy to register.
+	 */
+	void registerServerProxy(const std::string& url, const ServerProxy& sp);
+
+	/**
+	 * Lookup a server and get a ServerProxy for it. If he server could not
+	 * be found an exception is thrown.
+	 * @param url The server url to look for.
+	 * @return ServerProxy.
+	 */
+	ServerProxy findServerProxy(const std::string& url);
+
 private:
-	std::unique_ptr<Logger>        m_logger;
-	std::unique_ptr<TimerManager>  m_timerManager;
-	std::unique_ptr<Configuration> m_configuration;
+	::std::unique_ptr<Logger>        m_logger;
+	::std::unique_ptr<TimerManager>  m_timerManager;
+	::std::unique_ptr<Configuration> m_configuration;
+	::std::unique_ptr<Null>          m_null;
+
+	SharedPointerDict<ServerProxy>   m_serverProxies{};
 };
 
 } /* namespace FreeAX25 */

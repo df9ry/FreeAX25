@@ -119,7 +119,7 @@ void XMLRuntime::readSettings(
 		string value = fmX(settingElement->getTextContent());
 		m_environment->logDebug(
 				"Setting " + id + "/" + name + " = \"" + value + "\"");
-		settings.insert(name, new FreeAX25::Setting(
+		settings.insert1(name, new FreeAX25::Setting(
 				id + "/" + name, value, m_environment));
 	} // end for //
 }
@@ -140,7 +140,7 @@ void XMLRuntime::readPlugins(
 				"Define plugin " + id + "/" + name + "(" + file + ")");
 		FreeAX25::Plugin* plugin = new FreeAX25::Plugin(
 				id + "/" + name, file, m_environment);
-		plugins.insert(name, plugin);
+		plugins.insert1(name, plugin);
 
 	    { // Get settings:
 			auto nodeList = pluginNode->getElementsByTagName(toX("Settings"));
@@ -176,7 +176,35 @@ void XMLRuntime::readInstances(
 				"Define instance " + id + "/" + name);
 		FreeAX25::Instance* instance = new FreeAX25::Instance(
 				id + "/" + name, m_environment);
-		instances.insert(name, instance);
+		instances.insert1(name, instance);
+
+	    { // Get client endpoints:
+			auto nodeList = instanceNode->getElementsByTagName(toX("ClientEndPoint"));
+			for (uint32_t i = 0; i < nodeList->getLength(); ++i) {
+				auto instanceNode = static_cast<DOMElement*>(nodeList->item(i));
+				string name = fmX(instanceNode->getAttribute(toX("name")));
+				string url  = fmX(instanceNode->getAttribute(toX("url")));
+				m_environment->logDebug(
+						"Define client endpoint " + id + "/" + name + " as " + url);
+				FreeAX25::ClientEndPoint* endpoint =
+						new FreeAX25::ClientEndPoint(id + "/" + name, url, m_environment);
+				instance->clientEndPoints.insert1(name, endpoint);
+			} // end for //
+	    }
+
+	    { // Get server endpoints:
+			auto nodeList = instanceNode->getElementsByTagName(toX("ServerEndPoint"));
+			for (uint32_t i = 0; i < nodeList->getLength(); ++i) {
+				auto instanceNode = static_cast<DOMElement*>(nodeList->item(i));
+				string name = fmX(instanceNode->getAttribute(toX("name")));
+				string url  = fmX(instanceNode->getAttribute(toX("url")));
+				m_environment->logDebug(
+						"Define server endpoint " + id + "/" + name + " as " + url);
+				FreeAX25::ServerEndPoint* endpoint =
+						new FreeAX25::ServerEndPoint(id + "/" + name, url, m_environment);
+				instance->serverEndPoints.insert1(name, endpoint);
+			} // end for //
+	    }
 
 	    { // Get settings:
 			auto nodeList = instanceNode->getElementsByTagName(toX("Settings"));

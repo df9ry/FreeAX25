@@ -18,6 +18,7 @@
 
 #include "Plugin.h"
 #include "Environment.h"
+#include "Null.h"
 
 #include <dlfcn.h>
 #include <exception>
@@ -26,17 +27,12 @@ using namespace std;
 
 namespace FreeAX25 {
 
-/**
- * Constructor
- * @param name Name of this plugin
- * @param e Global environment
- */
+Plugin::Plugin():
+	m_name{""}, m_file{""}, m_environment{nullptr} {}
+
 Plugin::Plugin(const std::string& name, const std::string& file, Environment* e):
 	m_name{name}, m_file{file}, m_environment{e} {}
 
-/**
- * Destructor
- */
 Plugin::~Plugin() {
 	if (m_handle) dlclose(m_handle);
 }
@@ -45,11 +41,14 @@ void Plugin::load() {
 	m_environment->logInfo("Loading plugin \"" + m_name +"\"");
 	if (m_file.length() == 0) { // Builtin
 		if (m_name == "/_TIMER") {
-			m_init  = initTimerManager;
-			m_start = startTimerManager;
+			m_init  = FreeAX25::initTimerManager;
+			m_start = FreeAX25::startTimerManager;
 		} else if (m_name == "/_LOGGER") {
-			m_init  = initLogger;
-			m_start = startLogger;
+			m_init  = FreeAX25::initLogger;
+			m_start = FreeAX25::startLogger;
+		} else if (m_name == "/_NULL") {
+			m_init  = FreeAX25::initNull;
+			m_start = FreeAX25::startNull;
 		} else {
 			throw runtime_error(
 				"Unknown builtin plugin \"" + m_name + "\"");

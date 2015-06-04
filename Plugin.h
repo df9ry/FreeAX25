@@ -19,7 +19,7 @@
 #ifndef PLUGIN_H_
 #define PLUGIN_H_
 
-#include "Map.h"
+#include "UniquePointerDict"
 #include "Instance.h"
 #include "Setting.h"
 
@@ -31,6 +31,11 @@ class Environment;
 
 class Plugin {
 public:
+	/**
+	 * Default constructor.
+	 */
+	Plugin();
+
 	/**
 	 * Constructor
 	 * @param name Name of this plugin
@@ -46,12 +51,12 @@ public:
 	/**
 	 * Settings of this plugin
 	 */
-	Map<Setting> settings{};
+	UniquePointerDict<Setting> settings{};
 
 	/**
 	 * Instance of this plugin
 	 */
-	Map<Instance>    instances{};
+	UniquePointerDict<Instance>    instances{};
 
 	/**
 	 * Get the plugin name

@@ -19,6 +19,8 @@
 #include "Environment.h"
 
 #include <cstdlib>
+#include <stdexcept>
+#include <string>
 
 namespace FreeAX25 {
 
@@ -27,7 +29,8 @@ using namespace std;
 Environment::Environment():
 		m_logger{new Logger(this)},
 		m_timerManager{new TimerManager(this)},
-		m_configuration{new Configuration(this)}
+		m_configuration{new Configuration(this)},
+		m_null{new Null(this)}
 {
 	const char* _debug = getenv("LOG_LEVEL");
 	try {
@@ -41,5 +44,17 @@ Environment::Environment():
 
 Environment::~Environment() {
 }
+
+void Environment::registerServerProxy(const string& url, const ServerProxy& sp) {
+	m_serverProxies.insertCopy(url, sp);
+}
+
+ServerProxy Environment::findServerProxy(const string& url) {
+	ServerProxy sp = m_serverProxies.findEntry(url);
+	if (!sp)
+		throw invalid_argument("Service not found: " + url);
+	return sp;
+}
+
 
 } /* namespace FreeAX25 */

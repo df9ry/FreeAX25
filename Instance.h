@@ -20,7 +20,8 @@
 #define INSTANCE_H_
 
 #include "Setting.h"
-#include "Map.h"
+#include "ServerEndPoint.h"
+#include "UniquePointerDict"
 
 #include <string>
 
@@ -30,6 +31,12 @@ class Environment;
 
 class Instance {
 public:
+	/**
+	 * Default constructor.
+	 */
+	Instance():
+		m_name{""}, m_environment{nullptr} {}
+
 	/**
 	 * Constructor
 	 * @param name Name of the instance
@@ -46,7 +53,17 @@ public:
 	/**
 	 * Settings of this instance
 	 */
-	Map<Setting> settings{};
+	UniquePointerDict<Setting> settings{};
+
+	/**
+	 * ServerEndPoints of this instance.
+	 */
+	UniquePointerDict<ServerEndPoint> serverEndPoints{};
+
+	/**
+	 * ClientEndPoints of this instance.
+	 */
+	UniquePointerDict<ClientEndPoint> clientEndPoints{};
 
 	/**
 	 * Get the instance name

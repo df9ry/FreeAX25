@@ -19,7 +19,7 @@
 #ifndef CONFIGURATION_H_
 #define CONFIGURATION_H_
 
-#include "Map.h"
+#include "UniquePointerDict"
 #include "Plugin.h"
 #include "Setting.h"
 
@@ -61,12 +61,12 @@ public:
 	/**
 	 * Map of plugins
 	 */
-	Map<Plugin>  plugins{};
+	UniquePointerDict<Plugin>  plugins{};
 
 	/**
 	 * Map of settings
 	 */
-	Map<Setting> settings{};
+	UniquePointerDict<Setting> settings{};
 
 private:
 	Environment* m_environment;

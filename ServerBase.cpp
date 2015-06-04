@@ -33,18 +33,14 @@ namespace FreeAX25 {
 class ClientProxy;
 
 ServerBase::ServerBase() {
-	cerr << "ServerBase::ServerBase()" << endl;
+//	cerr << "ServerBase::ServerBase()" << endl;
 }
 
 ServerBase::~ServerBase() {
-	cerr << "ServerBase::~ServerBase()" << endl;
+//	cerr << "ServerBase::~ServerBase()" << endl;
 }
 
-ClientProxy ServerBase::onConnect(JsonX::JsonXValue&& parameter, ClientProxy&& downlink) {
-	throw logic_error("Unsupported service: connect");
-}
-
-ClientProxy ServerBase::onConnect(JsonX::JsonXValue&& parameter) {
+ServerProxy ServerBase::onConnect(JsonX::JsonXValue&& parameter, ServerProxy&& downlink) {
 	throw logic_error("Unsupported service: connect");
 }
 
@@ -65,7 +61,7 @@ JsonX::JsonXValue ServerBase::onCtrl(JsonX::JsonXValue&& request) {
 }
 
 ServerProxy ServerBase::getServerProxy() {
-	return ServerProxy(this);
+	return m_proxy;
 }
 
 } /* namespace JsonX */

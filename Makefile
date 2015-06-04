@@ -31,20 +31,19 @@ LDXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0 \
 			-L../../libStringUtil/_$(_ARCH)-$(_CONF) \
 			-L../../libSocketIO/_$(_ARCH)-$(_CONF)
 
-OBJS     =	FreeAX25.o \
-			XMLRuntime.o \
+OBJS     =	Configuration.o \
 			DOMTreeErrorReporter.o \
-			Logger.o \
-			Timer.o \
-			TimerManager.o \
 			Environment.o \
-			Configuration.o \
-			Plugin.o \
+			FreeAX25.o \
 			Instance.o \
-			Setting.o \
+			Logger.o \
+			Null.o \
+			Plugin.o \
 			ServerBase.o \
 			ServerProxy.o \
-			ClientProxy.o
+			Timer.o \
+			TimerManager.o \
+			XMLRuntime.o
 
 LIBS     =  -lJsonX -lB64 -lStringUtil -lSocketIO \
 			-lpthread -lxerces-c -ldl
@@ -62,6 +61,7 @@ all: $(TARGET)
 	cp ../../libStringUtil/_$(_ARCH)-$(_CONF)/libStringUtil.so .
 	cp ../../libJsonX/_$(_ARCH)-$(_CONF)/libJsonX.so .
 	cp ../../libB64/_$(_ARCH)-$(_CONF)/libB64.so .
+	cp ../../libSocketIO/_$(_ARCH)-$(_CONF)/libSocketIO.so .
 	echo "Build OK"
 	
 run: all
