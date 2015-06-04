@@ -37,6 +37,18 @@ public:
 	Plugin();
 
 	/**
+	 * Copy constructor.
+	 * @param other Other plugin.
+	 */
+	Plugin(const Plugin& other) = delete;
+
+	/**
+	 * Move constructor.
+	 * @param other Other plugin.
+	 */
+	Plugin(Plugin&& other);
+
+	/**
 	 * Constructor
 	 * @param name Name of this plugin
 	 * @param e Global environment
@@ -78,8 +90,8 @@ public:
 	}
 
 private:
-	const std::string m_name;
-	const std::string m_file;
+	std::string       m_name;
+	std::string       m_file;
 	Environment*      m_environment;
 	void*             m_handle{nullptr};
 	void(*m_init)(Environment* e, Plugin* p){nullptr};

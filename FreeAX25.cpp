@@ -20,6 +20,7 @@
 #include "Environment.h"
 #include "Configuration.h"
 #include "StringUtil.h"
+#include "TimerManager.h"
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>

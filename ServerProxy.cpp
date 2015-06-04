@@ -36,9 +36,9 @@ ServerProxy::ServerProxy(const ServerProxy& other):
 {
 }
 
-ServerProxy& ServerProxy::operator=(const ServerProxy& other):
-				m_server{other.m_server}
+ServerProxy& ServerProxy::operator=(const ServerProxy& other)
 {
+	m_server = other.m_server;
 	return *this;
 }
 

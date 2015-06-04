@@ -19,6 +19,7 @@
 #include "Plugin.h"
 #include "Environment.h"
 #include "Null.h"
+#include "TimerManager.h"
 
 #include <dlfcn.h>
 #include <exception>
@@ -29,6 +30,12 @@ namespace FreeAX25 {
 
 Plugin::Plugin():
 	m_name{""}, m_file{""}, m_environment{nullptr} {}
+
+Plugin::Plugin(Plugin&& other) {
+	swap(m_name, other.m_name);
+	swap(m_file, other.m_file);
+	swap(m_environment, other.m_environment);
+}
 
 Plugin::Plugin(const std::string& name, const std::string& file, Environment* e):
 	m_name{name}, m_file{file}, m_environment{e} {}

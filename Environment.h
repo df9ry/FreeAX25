@@ -20,13 +20,14 @@
 #define ENVIRONMENT_H_
 
 #include "Logger.h"
-#include "TimerManager.h"
-#include "Null.h"
-#include "Configuration.h"
 #include "ServerProxy.h"
 #include "SharedPointerDict"
 
 namespace FreeAX25 {
+
+class TimerManager;
+class Configuration;
+class Null;
 
 /**
  * The class Environment provides a single distribution point
@@ -49,7 +50,7 @@ public:
 	 * @return Logger
 	 */
 	inline Logger* getLogger() {
-		return m_logger.get();
+		return m_logger;
 	}
 
 	/**
@@ -89,7 +90,7 @@ public:
 	 * @return TimerManager
 	 */
 	inline TimerManager* getTimerManager() {
-		return m_timerManager.get();
+		return m_timerManager;
 	}
 
 	/**
@@ -97,7 +98,7 @@ public:
 	 * @return Configuration
 	 */
 	inline Configuration* getConfiguration() {
-		return m_configuration.get();
+		return m_configuration;
 	}
 
 	/**
@@ -116,10 +117,10 @@ public:
 	ServerProxy findServerProxy(const std::string& url);
 
 private:
-	::std::unique_ptr<Logger>        m_logger;
-	::std::unique_ptr<TimerManager>  m_timerManager;
-	::std::unique_ptr<Configuration> m_configuration;
-	::std::unique_ptr<Null>          m_null;
+	Logger*        m_logger;
+	TimerManager*  m_timerManager;
+	Configuration* m_configuration;
+	Null*          m_null;
 
 	SharedPointerDict<ServerProxy>   m_serverProxies{};
 };

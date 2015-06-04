@@ -32,7 +32,7 @@ namespace FreeAX25 {
 
 class ClientProxy;
 
-ServerBase::ServerBase() {
+ServerBase::ServerBase(): m_proxy(this) {
 //	cerr << "ServerBase::ServerBase()" << endl;
 }
 

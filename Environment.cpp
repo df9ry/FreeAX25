@@ -17,6 +17,9 @@
  */
 
 #include "Environment.h"
+#include "TimerManager.h"
+#include "Null.h"
+#include "Configuration.h"
 
 #include <cstdlib>
 #include <stdexcept>

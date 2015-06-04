@@ -20,6 +20,7 @@
 #define INSTANCE_H_
 
 #include "Setting.h"
+#include "ClientEndPoint.h"
 #include "ServerEndPoint.h"
 #include "UniquePointerDict"
 
@@ -36,6 +37,22 @@ public:
 	 */
 	Instance():
 		m_name{""}, m_environment{nullptr} {}
+
+	/**
+	 * Copy constructor.
+	 * @param other Other instance.
+	 */
+	Instance(const Instance& other):
+		m_name{other.m_name}, m_environment{other.m_environment} {};
+
+	/**
+	 * Move constructor.
+	 * @param other Other instance.
+	 */
+	Instance(Instance&& other) {
+		std::swap(m_name, other.m_name);
+		std::swap(m_environment, other.m_environment);
+	}
 
 	/**
 	 * Constructor
@@ -72,7 +89,7 @@ public:
 	const std::string& getName() const { return m_name; }
 
 private:
-	const std::string m_name;
+	std::string       m_name;
 	Environment*      m_environment;
 };
 

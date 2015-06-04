@@ -36,6 +36,15 @@ public:
 	 */
 	Setting(): m_name{""}, m_value{""}, m_environment{nullptr} {};
 
+	Setting(const Setting& other):
+		m_name{other.m_name}, m_value{other.m_value}, m_environment{other.m_environment} {};
+
+	Setting(Setting&& other) {
+		std::swap(m_name, other.m_name);
+		std::swap(m_value, other.m_value);
+		std::swap(m_environment, other.m_environment);
+	}
+
 	/**
 	 * Constructor
 	 * @param name Name of this setting
@@ -106,7 +115,7 @@ public:
 			const std::string& key,
 			const std::string& def = "")
 	{
-		const Setting& setting{dict.findEntryConst(key)};
+		const Setting setting{dict.findEntryConst(key)};
 		return setting.isEmpty() ? def : setting.asString();
 	}
 
@@ -122,7 +131,7 @@ public:
 			const std::string& key,
 			int def = -1)
 	{
-		const Setting& setting{dict.findEntryConst(key)};
+		const Setting setting{dict.findEntryConst(key)};
 		return setting.isEmpty() ? def : setting.asInt();
 	}
 
@@ -143,8 +152,8 @@ public:
 	}
 
 private:
-	const std::string m_name;
-	const std::string m_value;
+	std::string       m_name;
+	std::string       m_value;
 	Environment*      m_environment;
 };
 

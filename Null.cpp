@@ -21,6 +21,7 @@
 #include "Instance.h"
 #include "Environment.h"
 #include "ServerProxy.h"
+#include "Plugin.h"
 
 #include <stdexcept>
 

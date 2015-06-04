@@ -23,6 +23,8 @@
 #include "ServerEndPoint.h"
 #include "ClientEndPoint.h"
 #include "UniquePointerDict"
+#include "Instance.h"
+#include "Setting.h"
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/dom/DOM.hpp>
