@@ -61,11 +61,31 @@ public:
 	 * Constructor
 	 */
 	PointerDict() {}
-
+	
+	/**
+	 * Disallow copy.
+	 */
+	PointerDict(const PointerDict& other) = delete;
+	
+	/**
+	 * Disallow move.
+	 */
+	PointerDict(PointerDict&& other) = delete;
+	
 	/**
 	 * Destructor
 	 */
 	~PointerDict() {}
+	
+	/**
+	 * Disallow assingment.
+	 */
+	PointerDict& operator=(const PointerDict& other) = delete;
+	
+	/**
+	 * Disallow assingment.
+	 */
+	PointerDict& operator=(PointerDict&& other) = delete;
 
 	/**
 	 * Insert a value into the map with copy.
@@ -92,6 +112,21 @@ public:
 	{		
 		auto result = PointerDictBase<T, P>::insert(
 				PointerDictPair<T, P>{key, P{new T(::std::move(value))}});
+		if (!result.second)
+			throw std::invalid_argument("Double key: " + key);
+		return result.first;
+	}
+
+	/**
+	 * Insert a value into the map.
+	 * @param key Key of the entry.
+	 * @param pv Pointer to the entry.
+	 * @return Iterator.
+	 */
+	PointerDictIterator<T, P> insertNew(const std::string& key, T* value)
+	{		
+		auto result = PointerDictBase<T, P>::insert(
+				PointerDictPair<T, P>{key, P{value}});
 		if (!result.second)
 			throw std::invalid_argument("Double key: " + key);
 		return result.first;

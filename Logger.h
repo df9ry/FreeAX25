@@ -95,7 +95,7 @@ public:
 	/**
 	 * Start the Logger
 	 */
-	void start() {}
+	void start();
 
 	/**
 	 * Set the log level

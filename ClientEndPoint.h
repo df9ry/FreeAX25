@@ -19,9 +19,9 @@
 #ifndef CLIENTENDPOINT_H_
 #define CLIENTENDPOINT_H_
 
-namespace FreeAX25 {
-
 #include <string>
+
+namespace FreeAX25 {
 
 class ClientEndPoint {
 public:

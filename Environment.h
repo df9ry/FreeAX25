@@ -100,27 +100,11 @@ public:
 	}
 
 	/**
-	 * Write a DEBUG log message
-	 * @param msg The message to log
-	 */
-	inline void logDebug(const char* msg) {
-		logger.log(LogLevel::DEBUG, std::string(msg));
-	}
-
-	/**
 	 * Write a INFO log message
 	 * @param msg The message to log
 	 */
 	inline void logInfo(const std::string& msg) {
 		logger.log(LogLevel::INFO, msg);
-	}
-
-	/**
-	 * Write a INFO log message
-	 * @param msg The message to log
-	 */
-	inline void logInfo(const char* msg) {
-		logger.log(LogLevel::INFO, std::string(msg));
 	}
 
 	/**
@@ -132,34 +116,18 @@ public:
 	}
 
 	/**
-	 * Write a WARNING log message
-	 * @param msg The message to log
-	 */
-	inline void logWarning(const char* msg) {
-		logger.log(LogLevel::WARNING, std::string(msg));
-	}
-
-	/**
 	 * Write a ERROR log message
 	 * @param msg The message to log
 	 */
 	void logError(const std::string& msg) {
 		logger.log(LogLevel::ERROR, msg);
 	}
-
-	/**
-	 * Write a ERROR log message
-	 * @param msg The message to log
-	 */
-	void logError(const char* msg) {
-		logger.log(LogLevel::ERROR, std::string(msg));
-	}
 };
 
 /**
  * Global environment.
  */
-Environment environment{};
+extern Environment environment;
 
 } /* namespace FreeAX25 */
 

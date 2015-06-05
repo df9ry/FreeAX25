@@ -48,10 +48,10 @@ public:
 	Plugin(const Plugin& other) = delete;
 
 	/**
-	 * Move constructor.
-	 * @param other Other plugin.
+	 * You can not move a plugin.
+	 * @param not used.
 	 */
-	Plugin(Plugin&& other);
+	Plugin(Plugin&& other) = delete;
 
 	/**
 	 * You can not copy assign a Plugin.
@@ -61,11 +61,11 @@ public:
 	Plugin& operator=(const Plugin& other) = delete;
 
 	/**
-	 * Move assign a Plugin.
-	 * @param other Nor used.
+	 * You can not move a plugin.
+	 * @param other Not used.
 	 * @return Not used.
 	 */
-	Plugin& operator=(Plugin&& other);
+	Plugin& operator=(Plugin&& other) = delete;
 
 	/**
 	 * Destructor
@@ -89,6 +89,12 @@ public:
 	const std::string& getName() const { return m_name; }
 
 	/**
+	 * Get the plugin file
+	 * @return plugin file
+	 */
+	const std::string& getFile() const { return m_file; }
+
+	/**
 	 * Load and link the shared object or builtin
 	 */
 	void load();
@@ -102,8 +108,8 @@ public:
 	}
 
 private:
-	std::string       m_name;
-	std::string       m_file;
+	const std::string m_name;
+	const std::string m_file;
 	void*             m_handle{nullptr};
 	void(*m_init)(Plugin& p){nullptr};
 	void(*m_start)(){nullptr};

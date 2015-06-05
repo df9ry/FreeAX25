@@ -19,9 +19,9 @@
 #ifndef SERVERENDPOINT_H_
 #define SERVERENDPOINT_H_
 
-namespace FreeAX25 {
-
 #include <string>
+
+namespace FreeAX25 {
 
 class ServerEndPoint {
 public:
@@ -37,7 +37,7 @@ public:
 	 * @param url Url of this ServerEndPoint.
 	 */
 	ServerEndPoint(const std::string& name, const std::string& url):
-		m_name{name}, m_url{url} {};
+		m_name{name}, m_url{url} {}
 
 	/**
 	 * Copy constructor.
@@ -82,7 +82,7 @@ public:
 	/**
 	 * Destructor
 	 */
-	~ServerEndPoint() {};
+	~ServerEndPoint() {}
 
 	/**
 	 * Get the setting name

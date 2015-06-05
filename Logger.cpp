@@ -25,7 +25,7 @@
 #include <iostream>
 #include <ctime>
 #include <mutex>
-#include <exception>
+#include <stdexcept>
 #include <cstring>
 
 using namespace std;
@@ -51,7 +51,7 @@ static mutex mx;
  * @param p The plugin struct
  */
 void initLogger(Plugin& p) {
-	environment.logInfo("Init plugin \"" + p.getName() + "\"");
+	environment.logInfo("Init plugin \"_LOGGER\"");
 	environment.logger.init(p);
 }
 
@@ -59,31 +59,41 @@ void initLogger(Plugin& p) {
  * Plugin start.
  */
 void startLogger() {
-	environment.logInfo("Start plugin \"/_LOGGER\"");
+	environment.logInfo("Start plugin \"_LOGGER\"");
 	environment.logger.start();
 }
 
 Logger::Logger() {
 	// Be prepared for threaded output:
 	cerr.sync_with_stdio(true);
+	// Get default log level:
+	const char* _debug = getenv("LOG_LEVEL");
+	try {
+		setLevel(
+				(_debug != nullptr) ? Logger::decode(_debug) : LogLevel::NONE);
+	}
+	catch (const exception& e) {
+		cerr << "Invalid value of environment variable \"LOG_LEVEL\". Ignored: "
+			 << e.what() << endl;
+	}
+	catch (...) {
+		cerr << "Invalid value of environment variable \"LOG_LEVEL\". Ignored."
+			 << endl;
+	}
 }
 
 Logger::~Logger() {
 }
 
-/**
- * Plugin init
- * @param p Plugin data structure
- */
 void Logger::init(Plugin& p) {
 	string level = Setting::asStringValue(p.settings, "level", "NONE");
+	logInfo("Set log level to " + level);
 	m_level = decode(level);
-	logInfo("Log level set to " + level);
 }
 
-/**
- * LogLevel is already checked here.
- */
+void Logger::start() {
+}
+
 void Logger::_log(LogLevel l, const string& msg) {
 	auto now = chrono::system_clock::now();
 	auto now_c = chrono::system_clock::to_time_t(now);
@@ -96,15 +106,9 @@ void Logger::_log(LogLevel l, const string& msg) {
 	cerr << buf << LEVELS[static_cast<int>(l)] << msg << endl;
 }
 
-/**
- * Decode a textual representation of a log level. Throws exception, when
- * no match.
- * @param s The text to decode
- * @return Corresponding log level
- */
 LogLevel Logger::decode(const string& s) {
 	for (int i = 0; LEVELS[i] != nullptr; ++i)
-		if (strcmp(s.c_str(), rTrim(LEVELS[i]).c_str()) == 0)
+		if (strcmp(s.c_str(), rTrim(LEVELS[i], " ").c_str()) == 0)
 			return static_cast<LogLevel>(i);
 	throw invalid_argument("Log level \"" + s + "\"");
 }

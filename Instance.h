@@ -48,12 +48,10 @@ public:
 	Instance(const Instance& other) = delete;
 
 	/**
-	 * Move constructor.
-	 * @param other Other instance.
+	 * You can not move an instance.
+	 * @param other Not used.
 	 */
-	Instance(Instance&& other): m_name("") {
-		std::swap(m_name, other.m_name);
-	}
+	Instance(Instance&& other) = delete;
 
 	/**
 	 * You can not copy assign an instance.
@@ -63,14 +61,11 @@ public:
 	Instance& operator=(const Instance& other) = delete;
 
 	/**
-	 * Move assignment.
-	 * @param other Object to move from.
-	 * @return Reference to this.
+	 * You can not move assign an instance.
+	 * @param other Not used.
+	 * @return Not used.
 	 */
-	Instance& operator=(Instance&& other) {
-		std::swap(m_name, other.m_name);
-		return *this;
-	}
+	Instance& operator=(Instance&& other) = delete;
 
 	/**
 	 * Destructor

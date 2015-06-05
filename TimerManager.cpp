@@ -43,7 +43,7 @@ TimerManager::~TimerManager() {
  * @param p The plugin struct
  */
 void initTimerManager(Plugin& p) {
-	environment.logInfo(string("Init plugin \"/_TIMER\""));
+	environment.logInfo(string("Init plugin \"_TIMER\""));
 	environment.timerManager.init(p);
 }
 
@@ -51,7 +51,7 @@ void initTimerManager(Plugin& p) {
  * Plugin start.
  */
 void startTimerManager() {
-	environment.logInfo(string("Init plugin \"/_TIMER\""));
+	environment.logInfo(string("Start plugin \"_TIMER\""));
 	environment.timerManager.start();
 }
 
@@ -60,7 +60,7 @@ void startTimerManager() {
  * @param p Plugin data structure
  */
 void TimerManager::init(Plugin& p) {
-	int tick = Setting::asIntValue(p.settings, "tick", 100);
+	int tick = Setting::asIntValue(p.settings, string("tick"), 100);
 	m_tick = milliseconds{tick};
 	environment.logInfo("Tick set to " + to_string(tick) + "ms");
 }
@@ -69,7 +69,6 @@ void TimerManager::init(Plugin& p) {
  * Run the timer thread
  */
 void TimerManager::start() {
-	environment.logInfo(string("Start plugin \"/_TIMER\""));
 	std::thread _t{&TimerManager::_run, this};
 	m_thread = std::move(_t);
 }

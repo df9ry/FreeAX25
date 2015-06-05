@@ -21,13 +21,13 @@
 
 #include "ServerEndPoint.h"
 #include "ClientEndPoint.h"
-#include "UniquePointerDict"
 #include "Plugin.h"
 #include "Instance.h"
 #include "Setting.h"
+#include "UniquePointerDict"
 
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/dom/DOM.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 #include <ostream>
 #include <string>
@@ -84,20 +84,6 @@ public:
 	void read(const std::string& filename);
 
 private:
-    void readSettings(
-    		const std::string& id,
-    		XERCES_CPP_NAMESPACE::DOMElement* element,
-    		FreeAX25::UniquePointerDict<FreeAX25::Setting>& settings);
-
-    void readPlugins(
-    		const std::string& id,
-			XERCES_CPP_NAMESPACE::DOMElement* element,
-			FreeAX25::UniquePointerDict<FreeAX25::Plugin>& plugins);
-
-    void readInstances(
-    		const std::string& id,
-			XERCES_CPP_NAMESPACE::DOMElement* element,
-			FreeAX25::UniquePointerDict<FreeAX25::Instance>& instances);
 };
 
 // ---------------------------------------------------------------------------

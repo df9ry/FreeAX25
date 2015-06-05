@@ -22,8 +22,9 @@
 #include "StringUtil.h"
 #include "TimerManager.h"
 
-#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 #include <stdexcept>
 #include <string>
@@ -47,7 +48,7 @@ int main(int argc, const char* argv[]) {
 		xmlpath.append(argv[0]);
 		xmlpath.erase(0, xmlpath.find_last_of('/') + 1);
 		// Remove ".exe" for windows boxes:
-		if (StringUtil::endsWith(StringUtil::toLower(xmlpath), ".exe")
+		if (StringUtil::endsWith(StringUtil::toLower(xmlpath), ".exe"))
 			xmlpath = xmlpath.substr(0, xmlpath.size()-4);
 		// And last not least add the ".xml":
 		xmlpath.append(".xml");
@@ -57,8 +58,10 @@ int main(int argc, const char* argv[]) {
 
 	try {
 		// Create a XMLRuntime for input of configuration info:
-		XMLIO::XMLRuntime xmlio();
+		XMLIO::XMLRuntime xmlio{};
 		xmlio.read(xmlpath);
+		if (environment.logger.getLevel() >= LogLevel::DEBUG)
+			Configuration::print(environment.configuration);
 		environment.logInfo("Activating configuration \"" +
 				environment.configuration.getId() + "\"");
 		Configuration& c = environment.configuration;

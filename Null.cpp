@@ -17,6 +17,7 @@
  */
 
 #include "UniquePointerDict"
+#include "SharedPointerDict"
 #include "Null.h"
 #include "Instance.h"
 #include "Environment.h"
@@ -34,12 +35,15 @@ namespace FreeAX25 {
 static Null* instance{nullptr};
 
 void initNull(Plugin& p) {
-	if (instance == nullptr) throw runtime_error(
-			"Null not instantiated");
+	environment.logInfo("Init plugin \"_NULL\"");
+	if (instance != nullptr) throw runtime_error(
+			"Null already instantiated");
+	instance = new Null();
 	instance->init(p);
 }
 
 void startNull() {
+	environment.logInfo("Start plugin \"_NULL\"");
 	if (instance == nullptr) throw runtime_error(
 			"Null not instantiated");
 	instance->start();
@@ -57,6 +61,7 @@ Null::~Null() {
 
 void Null::init(Plugin& p) {
 	environment.logInfo("Init plugin \"" + p.getName() + "\"");
+	// Build instances:
 	for (UniquePointerDictConstIterator<Instance> ii = p.instances.begin();
 			ii != p.instances.end(); ++ii)
 	{
@@ -73,7 +78,6 @@ void Null::init(Plugin& p) {
 }
 
 void Null::start() {
-	environment.logInfo("Start plugin \"_NULL\"");
 }
 
 ServerProxy Null::onConnect(JsonX::JsonXValue&& parameter, ServerProxy&& downlink) {

@@ -89,6 +89,12 @@ public:
 	 */
 	UniquePointerDict<Setting> settings{};
 
+	/**
+	 * Pretty print a Configuration.
+	 * @param conf The Configuration to print.
+	 */
+	static void print(const Configuration& conf);
+
 private:
 	std::string  m_id{};
 };

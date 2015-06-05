@@ -30,15 +30,6 @@ namespace FreeAX25 {
 
 Plugin::Plugin(): m_name{""}, m_file{""} {}
 
-Plugin::Plugin(Plugin&& other): m_name{""}, m_file{""}
-{
-	swap(m_name,   other.m_name);
-	swap(m_file,   other.m_file);
-	swap(m_handle, other.m_handle);
-	swap(m_init,   other.m_init);
-	swap(m_start,  other.m_start);
-}
-
 Plugin::Plugin(const std::string& name, const std::string& file):
 	m_name{name}, m_file{file} {}
 
@@ -46,25 +37,16 @@ Plugin::~Plugin() {
 	if (m_handle) dlclose(m_handle);
 }
 
-Plugin& Plugin::operator=(Plugin&& other) {
-	swap(m_name,   other.m_name);
-	swap(m_file,   other.m_file);
-	swap(m_handle, other.m_handle);
-	swap(m_init,   other.m_init);
-	swap(m_start,  other.m_start);
-	return *this;
-}
-
 void Plugin::load() {
 	environment.logInfo("Loading plugin \"" + m_name +"\"");
 	if (m_file.length() == 0) { // Builtin
-		if (m_name == "/_TIMER") {
+		if (m_name == "_TIMER") {
 			m_init  = FreeAX25::initTimerManager;
 			m_start = FreeAX25::startTimerManager;
-		} else if (m_name == "/_LOGGER") {
+		} else if (m_name == "_LOGGER") {
 			m_init  = FreeAX25::initLogger;
 			m_start = FreeAX25::startLogger;
-		} else if (m_name == "/_NULL") {
+		} else if (m_name == "_NULL") {
 			m_init  = FreeAX25::initNull;
 			m_start = FreeAX25::startNull;
 		} else {
