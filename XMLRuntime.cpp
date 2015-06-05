@@ -18,12 +18,14 @@
 
 #include "XMLRuntime.h"
 #include "Configuration.h"
+#include "Environment.h"
 #include "DOMTreeErrorReporter.h"
 
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
 #include <exception>
 #include <cassert>
+#include <string>
 
 using namespace std;
 using namespace XERCES_CPP_NAMESPACE;
@@ -40,6 +42,15 @@ static inline const XMLCh* toX(const string& s) {
 }
 
 /**
+ * Convert standard string to XMLChar*
+ * @param s String to convert
+ * @return Converted XMLChar*
+ */
+static inline const XMLCh* toX(const char* s) {
+	return toX(string(s));
+}
+
+/**
  * Convert XMLChar* to standard string
  * @param x XMLChar* to convert
  * @return Converted standard string
@@ -48,12 +59,15 @@ static inline const string fmX(const XMLCh* x) {
 	return string(XMLString::transcode(x));
 }
 
+XMLRuntime::XMLRuntime() { XMLPlatformUtils::Initialize(); }
+
+XMLRuntime::~XMLRuntime() { XMLPlatformUtils::Terminate(); }
+
 /**
  * Read XML file into Configuration object
  * @param filename File to read
  */
-void XMLRuntime::read(const string& filename)
-{
+void XMLRuntime::read(const string& filename) {
     //
     //  Create our parser, then attach an error handler to the parser.
     //  The parser will call back to methods of the ErrorHandler if it
@@ -81,29 +95,29 @@ void XMLRuntime::read(const string& filename)
     XERCES_CPP_NAMESPACE::DOMDocument* doc = parser.getDocument();
     assert(doc != nullptr);
 
-    FreeAX25::Configuration* config = m_environment->getConfiguration();
+    FreeAX25::Configuration& config = FreeAX25::environment.configuration;
     assert(config != nullptr);
 
     auto rootElement = doc->getDocumentElement();
     auto configName = rootElement->getAttribute(toX("name"));
-    config->setId(fmX(configName));
+    config.setId(fmX(configName));
 
     { // Get settings:
 		auto nodeList = rootElement->getElementsByTagName(toX("Settings"));
 		if (nodeList->getLength() > 0)
 			readSettings(
-					"",
+					string(""),
 					static_cast<DOMElement*>(nodeList->item(0)),
-					config->settings);
+					config.settings);
     }
 
     { // Get plugins:
 		auto nodeList = rootElement->getElementsByTagName(toX("Plugins"));
 		if (nodeList->getLength() > 0)
 			readPlugins(
-					"",
+					string(""),
 					static_cast<DOMElement*>(nodeList->item(0)),
-					config->plugins);
+					config.plugins);
     }
 }
 
@@ -118,9 +132,9 @@ void XMLRuntime::readSettings(
 		auto settingElement = static_cast<DOMElement*>(nodeList->item(i));
 		string name  = fmX(settingElement->getAttribute(toX("name")));
 		string value = fmX(settingElement->getTextContent());
-		m_environment->logDebug(
+		FreeAX25::environment.logDebug(
 				"Setting " + id + "/" + name + " = \"" + value + "\"");
-		FreeAX25::Setting setting(id + "/" + name, value, m_environment);
+		FreeAX25::Setting setting(id + "/" + name, value);
 		settings.insertMove(name, move(setting));
 	} // end for //
 }
@@ -137,9 +151,9 @@ void XMLRuntime::readPlugins(
 		string name  = fmX(pluginNode->getAttribute(toX("name")));
 		auto _file = pluginNode->getAttribute(toX("file"));
 		string file = (_file != nullptr) ? fmX(_file) : "";
-		m_environment->logDebug(
+		FreeAX25::environment.logDebug(
 				"Define plugin " + id + "/" + name + "(" + file + ")");
-		FreeAX25::Plugin plugin(id + "/" + name, file, m_environment);
+		FreeAX25::Plugin plugin(id + "/" + name, file);
 
 	    { // Get settings:
 			auto nodeList = pluginNode->getElementsByTagName(toX("Settings"));
@@ -173,9 +187,9 @@ void XMLRuntime::readInstances(
 	for (uint32_t i = 0; i < nodeList->getLength(); ++i) {
 		auto instanceNode = static_cast<DOMElement*>(nodeList->item(i));
 		string name  = fmX(instanceNode->getAttribute(toX("name")));
-		m_environment->logDebug(
+		FreeAX25::environment.logDebug(
 				"Define instance " + id + "/" + name);
-		FreeAX25::Instance instance(id + "/" + name, m_environment);
+		FreeAX25::Instance instance(id + "/" + name);
 
 	    { // Get client endpoints:
 			auto nodeList = instanceNode->getElementsByTagName(toX("ClientEndPoint"));
@@ -183,9 +197,9 @@ void XMLRuntime::readInstances(
 				auto instanceNode = static_cast<DOMElement*>(nodeList->item(i));
 				string name = fmX(instanceNode->getAttribute(toX("name")));
 				string url  = fmX(instanceNode->getAttribute(toX("url")));
-				m_environment->logDebug(
+				FreeAX25::environment.logDebug(
 						"Define client endpoint " + id + "/" + name + " as " + url);
-				FreeAX25::ClientEndPoint endpoint(id + "/" + name, url, m_environment);
+				FreeAX25::ClientEndPoint endpoint(id + "/" + name, url);
 				instance.clientEndPoints.insertMove(name, move(endpoint));
 			} // end for //
 	    }
@@ -196,9 +210,9 @@ void XMLRuntime::readInstances(
 				auto instanceNode = static_cast<DOMElement*>(nodeList->item(i));
 				string name = fmX(instanceNode->getAttribute(toX("name")));
 				string url  = fmX(instanceNode->getAttribute(toX("url")));
-				m_environment->logDebug(
+				FreeAX25::environment.logDebug(
 						"Define server endpoint " + id + "/" + name + " as " + url);
-				FreeAX25::ServerEndPoint endpoint(id + "/" + name, url, m_environment);
+				FreeAX25::ServerEndPoint endpoint(id + "/" + name, url);
 				instance.serverEndPoints.insertMove(name, move(endpoint));
 			} // end for //
 	    }

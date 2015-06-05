@@ -28,24 +28,35 @@ using namespace std;
 
 namespace FreeAX25 {
 
-Plugin::Plugin():
-	m_name{""}, m_file{""}, m_environment{nullptr} {}
+Plugin::Plugin(): m_name{""}, m_file{""} {}
 
-Plugin::Plugin(Plugin&& other) {
-	swap(m_name, other.m_name);
-	swap(m_file, other.m_file);
-	swap(m_environment, other.m_environment);
+Plugin::Plugin(Plugin&& other): m_name{""}, m_file{""}
+{
+	swap(m_name,   other.m_name);
+	swap(m_file,   other.m_file);
+	swap(m_handle, other.m_handle);
+	swap(m_init,   other.m_init);
+	swap(m_start,  other.m_start);
 }
 
-Plugin::Plugin(const std::string& name, const std::string& file, Environment* e):
-	m_name{name}, m_file{file}, m_environment{e} {}
+Plugin::Plugin(const std::string& name, const std::string& file):
+	m_name{name}, m_file{file} {}
 
 Plugin::~Plugin() {
 	if (m_handle) dlclose(m_handle);
 }
 
+Plugin& Plugin::operator=(Plugin&& other) {
+	swap(m_name,   other.m_name);
+	swap(m_file,   other.m_file);
+	swap(m_handle, other.m_handle);
+	swap(m_init,   other.m_init);
+	swap(m_start,  other.m_start);
+	return *this;
+}
+
 void Plugin::load() {
-	m_environment->logInfo("Loading plugin \"" + m_name +"\"");
+	environment.logInfo("Loading plugin \"" + m_name +"\"");
 	if (m_file.length() == 0) { // Builtin
 		if (m_name == "/_TIMER") {
 			m_init  = FreeAX25::initTimerManager;
@@ -66,7 +77,7 @@ void Plugin::load() {
 		if (!m_handle) throw runtime_error(
 				"Unable to load " + m_name + "! Cause: " + dlerror());
 		dlerror(); // Clear error messages
-		m_init = (void(*)(Environment*, Plugin*)) dlsym(m_handle, "init");
+		m_init = (void(*)(Plugin&)) dlsym(m_handle, "init");
 		error = dlerror();
 		if (error != nullptr) throw runtime_error(
 				"Unable to link \"init\" from " + m_name + "! Cause: " +error);

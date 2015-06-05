@@ -27,8 +27,6 @@
 
 namespace FreeAX25 {
 
-class Environment;
-
 class Plugin {
 public:
 	/**
@@ -37,8 +35,15 @@ public:
 	Plugin();
 
 	/**
-	 * Copy constructor.
-	 * @param other Other plugin.
+	 * Constructor
+	 * @param name Name of this plugin
+	 * @param e Global environment
+	 */
+	Plugin(const std::string& name, const std::string& file);
+
+	/**
+	 * You can not copy a plugin.
+	 * @param other Not used.
 	 */
 	Plugin(const Plugin& other) = delete;
 
@@ -49,11 +54,18 @@ public:
 	Plugin(Plugin&& other);
 
 	/**
-	 * Constructor
-	 * @param name Name of this plugin
-	 * @param e Global environment
+	 * You can not copy assign a Plugin.
+	 * @param other Not used.
+	 * @return Not used.
 	 */
-	Plugin(const std::string& name, const std::string& file, Environment* e);
+	Plugin& operator=(const Plugin& other) = delete;
+
+	/**
+	 * Move assign a Plugin.
+	 * @param other Nor used.
+	 * @return Not used.
+	 */
+	Plugin& operator=(Plugin&& other);
 
 	/**
 	 * Destructor
@@ -68,7 +80,7 @@ public:
 	/**
 	 * Instance of this plugin
 	 */
-	UniquePointerDict<Instance>    instances{};
+	UniquePointerDict<Instance> instances{};
 
 	/**
 	 * Get the plugin name
@@ -82,19 +94,18 @@ public:
 	void load();
 
 	void init() {
-		if (m_init != nullptr) m_init(m_environment, this);
+		if (m_init) m_init(*this);
 	}
 
 	void start() {
-		if (m_start != nullptr) m_start();
+		if (m_start) m_start();
 	}
 
 private:
 	std::string       m_name;
 	std::string       m_file;
-	Environment*      m_environment;
 	void*             m_handle{nullptr};
-	void(*m_init)(Environment* e, Plugin* p){nullptr};
+	void(*m_init)(Plugin& p){nullptr};
 	void(*m_start)(){nullptr};
 };
 

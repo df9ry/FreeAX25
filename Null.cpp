@@ -24,6 +24,7 @@
 #include "Plugin.h"
 
 #include <stdexcept>
+#include <cassert>
 
 using namespace std;
 
@@ -32,7 +33,7 @@ namespace FreeAX25 {
 // The one and only instance
 static Null* instance{nullptr};
 
-void initNull(Environment* e, Plugin* p) {
+void initNull(Plugin& p) {
 	if (instance == nullptr) throw runtime_error(
 			"Null not instantiated");
 	instance->init(p);
@@ -44,7 +45,7 @@ void startNull() {
 	instance->start();
 }
 
-Null::Null(Environment* e): m_environment{e} {
+Null::Null() {
 	if (instance != nullptr) throw runtime_error(
 			"Null already instantiated");
 	instance = this;
@@ -54,24 +55,25 @@ Null::~Null() {
 	cerr << "Destroying Null !!!" << endl;
 }
 
-void Null::init(Plugin* p) {
-	m_environment->logInfo("Init plugin \"" + p->getName() + "\"");
-	for (UniquePointerDictConstIterator<Instance> ii = p->instances.begin();
-			ii != p->instances.end(); ++ii)
+void Null::init(Plugin& p) {
+	environment.logInfo("Init plugin \"" + p.getName() + "\"");
+	for (UniquePointerDictConstIterator<Instance> ii = p.instances.begin();
+			ii != p.instances.end(); ++ii)
 	{
 		const Instance* i = ii->second.get();
 		for (UniquePointerDictConstIterator<ServerEndPoint> sepi = i->serverEndPoints.begin();
 				sepi != i->serverEndPoints.end(); ++sepi) {
 			const ServerEndPoint* sep = sepi->second.get();
+			assert(sep != nullptr);
 			const string url = sep->getUrl();
-			m_environment->logInfo("Register service at: " + sep->getUrl());
-			m_environment->registerServerProxy(sep->getUrl(), getServerProxy());
+			environment.logInfo("Register service at: " + sep->getUrl());
+			environment.serverProxies.insertMove(sep->getUrl(), getServerProxy());
 		}
 	}
 }
 
 void Null::start() {
-	m_environment->logInfo("Start plugin \"_NULL\"");
+	environment.logInfo("Start plugin \"_NULL\"");
 }
 
 ServerProxy Null::onConnect(JsonX::JsonXValue&& parameter, ServerProxy&& downlink) {

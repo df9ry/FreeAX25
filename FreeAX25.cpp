@@ -30,7 +30,6 @@
 #include <unistd.h>
 
 using namespace std;
-using namespace StringUtil;
 using namespace FreeAX25;
 
 int main(int argc, const char* argv[]) {
@@ -48,35 +47,34 @@ int main(int argc, const char* argv[]) {
 		xmlpath.append(argv[0]);
 		xmlpath.erase(0, xmlpath.find_last_of('/') + 1);
 		// Remove ".exe" for windows boxes:
-		if (endsWith(toLower(xmlpath), ".exe"))
+		if (StringUtil::endsWith(StringUtil::toLower(xmlpath), ".exe")
 			xmlpath = xmlpath.substr(0, xmlpath.size()-4);
 		// And last not least add the ".xml":
 		xmlpath.append(".xml");
 	}
 
-	FreeAX25::Environment env{};
-	env.logInfo("Parsing " + xmlpath);
+	environment.logInfo("Parsing " + xmlpath);
 
 	try {
 		// Create a XMLRuntime for input of configuration info:
-		XMLIO::XMLRuntime xmlio(&env);
+		XMLIO::XMLRuntime xmlio();
 		xmlio.read(xmlpath);
-		env.logInfo("Activating configuration \"" +
-				env.getConfiguration()->getId() + "\"");
-		Configuration& c = *env.getConfiguration();
-		env.logInfo("Load all plugins");
+		environment.logInfo("Activating configuration \"" +
+				environment.configuration.getId() + "\"");
+		Configuration& c = environment.configuration;
+		environment.logInfo(string("Load all plugins"));
 		for (auto i = c.plugins.begin(); i != c.plugins.end(); ++i)
 			i->second->load();
-		env.logInfo("Init all plugins");
+		environment.logInfo(string("Init all plugins"));
 		for (auto i = c.plugins.begin(); i != c.plugins.end(); ++i)
 			i->second->init();
-		env.logInfo("Start all plugins");
+		environment.logInfo(string("Start all plugins"));
 		for (auto i = c.plugins.begin(); i != c.plugins.end(); ++i)
 			i->second->start();
 	}
 	catch(const XERCES_CPP_NAMESPACE::XMLException &e)
 	{
-		env.logError(
+		environment.logError(
 			"Error during XML IO: Exception message: " +
 			XMLIO::StrX(e.getMessage()).str());
 		return EXIT_FAILURE;
@@ -86,23 +84,23 @@ int main(int argc, const char* argv[]) {
 		const unsigned int maxChars = 2047;
 		XMLCh errText[maxChars + 1];
 
-		env.logError(string(
+		environment.logError(string(
 				"DOM Error during parsing: DOMException code is: ")
 				+ to_string(e.code));
 
 		if (XERCES_CPP_NAMESPACE::DOMImplementation::loadDOMExceptionMsg(e.code, errText, maxChars))
-			 env.logError("  Message is: " + XMLIO::StrX(errText).str());
+			 environment.logError("  Message is: " + XMLIO::StrX(errText).str());
 
 		return EXIT_FAILURE;
 	}
 	catch (const XERCES_CPP_NAMESPACE::OutOfMemoryException &e)
 	{
-		env.logError("XML IO OutOfMemoryException");
+		environment.logError(string("XML IO OutOfMemoryException"));
 		return EXIT_FAILURE;
 	}
 	catch (const runtime_error& e)
 	{
-		env.logError(string("Runtime error: ") + e.what());
+		environment.logError(string("Runtime error: ") + e.what());
 		return EXIT_FAILURE;
 	}
 	catch (const exception& e)
@@ -112,12 +110,12 @@ int main(int argc, const char* argv[]) {
 	}
 	catch (...)
 	{
-		env.logError("Unknown XML IO error");
+		environment.logError(string("Unknown XML IO error"));
 		return EXIT_FAILURE;
 	}
 
 	// The program is finished when the heart beat stops:
-	env.getTimerManager()->join();
-	env.logInfo("Regular program exit");
+	environment.timerManager.join();
+	environment.logInfo(string("Regular program exit"));
 	return EXIT_SUCCESS;
 }

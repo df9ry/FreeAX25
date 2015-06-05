@@ -33,11 +33,11 @@ namespace FreeAX25 {
 class ClientProxy;
 
 ServerBase::ServerBase(): m_proxy(this) {
-//	cerr << "ServerBase::ServerBase()" << endl;
+	cerr << "ServerBase::ServerBase: " << hex << (uint64_t)this << endl;
 }
 
 ServerBase::~ServerBase() {
-//	cerr << "ServerBase::~ServerBase()" << endl;
+	cerr << "ServerBase::~ServerBase: " << hex << (uint64_t)this << endl;
 }
 
 ServerProxy ServerBase::onConnect(JsonX::JsonXValue&& parameter, ServerProxy&& downlink) {

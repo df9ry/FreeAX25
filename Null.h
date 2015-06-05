@@ -21,18 +21,16 @@
 #define NULL_H_
 
 #include "ServerBase.h"
+#include "Plugin.h"
 
 namespace FreeAX25 {
-
-class Environment;
-class Plugin;
 
 /**
  * Plugin initialize.
  * @param e The environment struct
  * @param p The plugin struct
  */
-void initNull(Environment* e, Plugin* p);
+void initNull(Plugin& p);
 
 /**
  * Plugin start.
@@ -48,9 +46,8 @@ public:
 
 	/**
 	 * Constructor
-	 * @param e Global environment
 	 */
-	Null(Environment* e);
+	Null();
 
 	/**
 	 * Destructor
@@ -61,7 +58,7 @@ public:
 	 * Initialize the Null
 	 * @param p Plugin data structure
 	 */
-	void init(Plugin* p);
+	void init(Plugin& p);
 
 	/**
 	 * Start the Null
@@ -78,9 +75,6 @@ protected:
 	virtual void onReceive(JsonX::JsonXValue&& message, MessagePriority priority);
 
 	virtual JsonX::JsonXValue onCtrl(JsonX::JsonXValue&& request);
-
-private:
-	Environment* m_environment;
 };
 
 } /* namespace FreeAX25 */

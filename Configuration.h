@@ -33,30 +33,51 @@ class Configuration {
 public:
 	/**
 	 * Constructor
-	 * @param e Global Environment
 	 */
-	Configuration(Environment* e);
+	Configuration() {};
 
 	/**
-	 * Destructor
+	 * You can not copy Configuration.
+	 * @param other Not used.
 	 */
-	~Configuration();
+	Configuration(const Configuration& other) = delete;
+
+	/**
+	 * You can not move Configuration.
+	 * @param other Not used.
+	 */
+	Configuration(Configuration&& other) = delete;
+
+	/**
+	 * You can not copy assign Configuration.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	Configuration& operator=(const Configuration& other) = delete;
+
+	/**
+	 * You can not move assign Configuration.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	Configuration& operator=(Configuration&& other) = delete;
+
+	/**
+	 * Destructor.
+	 */
+	~Configuration() {};
 
 	/**
 	 * Get ID of this configuration
 	 * @return ID
 	 */
-	const std::string& getId() const {
-		return m_id;
-	}
+	const std::string& getId() const { return m_id; }
 
 	/**
 	 * Set the ID of this config
 	 * @param id The ID to set
 	 */
-	void setId(const std::string& id) {
-		m_id = id;
-	}
+	void setId(const std::string& id) { m_id = id; }
 
 	/**
 	 * Map of plugins
@@ -69,8 +90,6 @@ public:
 	UniquePointerDict<Setting> settings{};
 
 private:
-	Environment* m_environment;
-
 	std::string  m_id{};
 };
 

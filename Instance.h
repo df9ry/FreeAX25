@@ -28,39 +28,49 @@
 
 namespace FreeAX25 {
 
-class Environment;
-
 class Instance {
 public:
 	/**
 	 * Default constructor.
 	 */
-	Instance():
-		m_name{""}, m_environment{nullptr} {}
+	Instance(): m_name{""} {}
 
 	/**
-	 * Copy constructor.
-	 * @param other Other instance.
+	 * Constructor
+	 * @param name Name of the instance
 	 */
-	Instance(const Instance& other):
-		m_name{other.m_name}, m_environment{other.m_environment} {};
+	Instance(const std::string& name): m_name{name} {};
+
+	/**
+	 * You can not copy an instance.
+	 * @param other Not used..
+	 */
+	Instance(const Instance& other) = delete;
 
 	/**
 	 * Move constructor.
 	 * @param other Other instance.
 	 */
-	Instance(Instance&& other) {
+	Instance(Instance&& other): m_name("") {
 		std::swap(m_name, other.m_name);
-		std::swap(m_environment, other.m_environment);
 	}
 
 	/**
-	 * Constructor
-	 * @param name Name of the instance
-	 * @param e Global environment
+	 * You can not copy assign an instance.
+	 * @param other Not used.
+	 * @return Not used.
 	 */
-	Instance(const std::string& name, Environment* e):
-		m_name{name}, m_environment{e} {};
+	Instance& operator=(const Instance& other) = delete;
+
+	/**
+	 * Move assignment.
+	 * @param other Object to move from.
+	 * @return Reference to this.
+	 */
+	Instance& operator=(Instance&& other) {
+		std::swap(m_name, other.m_name);
+		return *this;
+	}
 
 	/**
 	 * Destructor
@@ -90,7 +100,6 @@ public:
 
 private:
 	std::string       m_name;
-	Environment*      m_environment;
 };
 
 } /* namespace FreeAX25 */

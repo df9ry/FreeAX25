@@ -42,9 +42,35 @@ public:
 	ServerBase();
 
 	/**
+	 * You can not copy a server.
+	 * @param other Not used.
+	 */
+	ServerBase(const ServerBase& other) = delete;
+
+	/**
+	 * You can not move a server.
+	 * @param other Not used.
+	 */
+	ServerBase(ServerBase&& other) = delete;
+
+	/**
 	 * Destructor.
 	 */
 	virtual ~ServerBase();
+
+	/**
+	 * You can  not assign a server.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	ServerBase& operator=(const ServerBase& other) = delete;
+
+	/**
+	 * You can  not assign a server.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	ServerBase& operator=(ServerBase&& other) = delete;
 
 	/**
 	 * Get a ServerProxy for this server.

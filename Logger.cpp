@@ -44,37 +44,28 @@ static constexpr const char* LEVELS[] = {
 
 // Used to synchronize log writes
 static mutex mx;
-// The one and only instance
-static Logger* instance{nullptr};
 
 /**
  * Plugin initialize.
  * @param e The environment struct
  * @param p The plugin struct
  */
-void initLogger(Environment* e, Plugin* p) {
-	e->logInfo("Init plugin \"" + p->getName() + "\"");
-	if (instance == nullptr) throw runtime_error(
-			"Logger not instantiated");
-	instance->init(p);
+void initLogger(Plugin& p) {
+	environment.logInfo("Init plugin \"" + p.getName() + "\"");
+	environment.logger.init(p);
 }
 
 /**
  * Plugin start.
  */
 void startLogger() {
-	if (instance == nullptr) throw runtime_error(
-			"Logger not instantiated");
-	instance->logInfo("Start plugin \"/_LOGGER\"");
-	instance->start();
+	environment.logInfo("Start plugin \"/_LOGGER\"");
+	environment.logger.start();
 }
 
-Logger::Logger(Environment* e): m_environment{e} {
+Logger::Logger() {
 	// Be prepared for threaded output:
 	cerr.sync_with_stdio(true);
-	if (instance != nullptr) throw runtime_error(
-			"Logger already instantiated");
-	instance = this;
 }
 
 Logger::~Logger() {
@@ -84,8 +75,8 @@ Logger::~Logger() {
  * Plugin init
  * @param p Plugin data structure
  */
-void Logger::init(Plugin* p) {
-	string level = Setting::asString(p->settings, "level", "NONE");
+void Logger::init(Plugin& p) {
+	string level = Setting::asStringValue(p.settings, "level", "NONE");
 	m_level = decode(level);
 	logInfo("Log level set to " + level);
 }

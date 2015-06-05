@@ -34,24 +34,56 @@ public:
 	/**
 	 * Standard constructor.
 	 */
-	Setting(): m_name{""}, m_value{""}, m_environment{nullptr} {};
-
-	Setting(const Setting& other):
-		m_name{other.m_name}, m_value{other.m_value}, m_environment{other.m_environment} {};
-
-	Setting(Setting&& other) {
-		std::swap(m_name, other.m_name);
-		std::swap(m_value, other.m_value);
-		std::swap(m_environment, other.m_environment);
-	}
+	Setting(): m_name{""}, m_value{""}, m_set{false} {};
 
 	/**
 	 * Constructor
-	 * @param name Name of this setting
-	 * @param e Global environment
+	 * @param name Name of this setting.
+	 * @param value Value of this setting.
 	 */
-	Setting(const std::string& name, const std::string& value, Environment* e):
-		m_name{name}, m_value{value}, m_environment{e} {};
+	Setting(const std::string& name, const std::string& value):
+		m_name{name}, m_value{value}, m_set{true} {};
+
+	/**
+	 * Copy constructor.
+	 * @param other Setting to copy from.
+	 */
+	Setting(const Setting& other):
+		m_name{other.m_name}, m_value{other.m_value}, m_set{other.m_set} {};
+
+	/**
+	 * Move constructor.
+	 * @param other Setting to move.
+	 */
+	Setting(Setting&& other): m_name{""}, m_value{""}, m_set{false} {
+		std::swap(m_name,  other.m_name);
+		std::swap(m_value, other.m_value);
+		std::swap(m_set,   other.m_set);
+	}
+
+	/**
+	 * Copy assignment.
+	 * @param other The Setting to assign.
+	 * @return Reference to this.
+	 */
+	Setting& operator=(const Setting& other) {
+		m_name  = other.m_name;
+		m_value = other.m_value;
+		m_set   = other.m_set;
+		return *this;
+	}
+
+	/**
+	 * Move assignment.
+	 * @param other The Setting to move.
+	 * @return Reference to this.
+	 */
+	Setting& operator=(Setting&& other) {
+		std::swap(m_name,  other.m_name);
+		std::swap(m_value, other.m_value);
+		std::swap(m_set,   other.m_set);
+		return *this;
+	}
 
 	/**
 	 * Destructor
@@ -62,7 +94,13 @@ public:
 	 * Test if this Setting is set.
 	 * @return If Setting is set.
 	 */
-	bool isEmpty() const noexcept { return m_environment; }
+	bool isSet() const noexcept { return m_set; }
+
+	/**
+	 * Test if this Setting is empty.
+	 * @return If Setting is empty.
+	 */
+	bool isEmpty() const noexcept { return !m_set; }
 
 	/**
 	 * Get the setting name
@@ -83,6 +121,7 @@ public:
 	int asInt() const { return std::stoi(m_value); }
 
 	const bool asBool() const {
+		if (!m_set) throw std::runtime_error("Value is not set");
 		if (m_value == "true") return true;
 		if (m_value == "false") return false;
 		throw std::invalid_argument("Invalid boolean value: " + m_value);
@@ -91,17 +130,26 @@ public:
 	/**
 	 * Get value as string.
 	 */
-	explicit operator std::string() const noexcept { return asString(); }
+	explicit operator std::string() const {
+		if (!m_set) throw std::runtime_error("Value is not set");
+		return asString();
+	}
 
 	/**
 	 * Get value as int.
 	 */
-	explicit operator int() const { return asInt(); }
+	explicit operator int() const {
+		if (!m_set) throw std::runtime_error("Value is not set");
+		return asInt();
+	}
 
 	/**
 	 * Get value as boolean.
 	 */
-	explicit operator bool() const { return asBool(); }
+	explicit operator bool() const {
+		if (!m_set) throw std::runtime_error("Value is not set");
+		return asBool();
+	}
 
 	/**
 	 * Helper function to retrieve values.
@@ -110,13 +158,13 @@ public:
 	 * @param def Default value, if value is not found.
 	 * @return Value or default value, if key is not found.
 	 */
-	static std::string asString(
+	static const std::string asStringValue(
 			const UniquePointerDict<Setting>& dict,
 			const std::string& key,
 			const std::string& def = "")
 	{
 		const Setting setting{dict.findEntryConst(key)};
-		return setting.isEmpty() ? def : setting.asString();
+		return setting.m_set ? setting.asString() : def;
 	}
 
 	/**
@@ -126,13 +174,13 @@ public:
 	 * @param def Default value, if value is not found.
 	 * @return Value or default value, if key is not found.
 	 */
-	static int asInt(
+	static int asIntValue(
 			const UniquePointerDict<Setting>& dict,
 			const std::string& key,
 			int def = -1)
 	{
 		const Setting setting{dict.findEntryConst(key)};
-		return setting.isEmpty() ? def : setting.asInt();
+		return setting.m_set ? setting.asInt() : def;
 	}
 
 	/**
@@ -142,19 +190,19 @@ public:
 	 * @param def Default value, if value is not found.
 	 * @return Value or default value, if key is not found.
 	 */
-	static bool asBool(
+	static bool asBoolValue(
 			const UniquePointerDict<Setting>& dict,
 			const std::string& key,
 			bool def = false)
 	{
 		const Setting& setting{dict.findEntryConst(key)};
-		return setting.isEmpty() ? def : setting.asBool();
+		return setting.m_set ? setting.asBool() : def;
 	}
 
 private:
 	std::string       m_name;
 	std::string       m_value;
-	Environment*      m_environment;
+	bool              m_set;
 };
 
 } /* namespace FreeAX25 */

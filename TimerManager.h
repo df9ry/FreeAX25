@@ -19,6 +19,9 @@
 #ifndef TIMERMANAGER_H_
 #define TIMERMANAGER_H_
 
+#include "Timer.h"
+#include "Plugin.h"
+
 #include <map>
 #include <chrono>
 #include <mutex>
@@ -28,15 +31,12 @@
 
 namespace FreeAX25 {
 
-class Timer;
-class Plugin;
-
 /**
  * Plugin initialize.
  * @param e The environment struct
  * @param p The plugin struct
  */
-void initTimerManager(Environment* e, Plugin* p);
+void initTimerManager(Plugin& p);
 
 /**
  * Plugin start.
@@ -52,9 +52,20 @@ class TimerManager {
 public:
 	/**
 	 * Constructor
-	 * @param e Global environment
 	 */
-	TimerManager(Environment* e);
+	TimerManager();
+
+	/**
+	 * You can not copy a TimerManager.
+	 * @param other Not used.
+	 */
+	TimerManager(const TimerManager& other) = delete;
+
+	/**
+	 * You can not move a TimerManager.
+	 * @param other Not used.
+	 */
+	TimerManager(TimerManager&& other) = delete;
 
 	/**
 	 * Destructor
@@ -62,10 +73,24 @@ public:
 	~TimerManager();
 
 	/**
+	 * You can not assign a TimerManager.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	TimerManager& operator=(const TimerManager& other) = delete;
+
+	/**
+	 * You can not assign a TimerManager.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	TimerManager& operator=(TimerManager&& other) = delete;
+
+	/**
 	 * Initialize the TimerManager
 	 * @param p Plugin data structure
 	 */
-	void init(Plugin* p);
+	void init(Plugin& p);
 
 	/**
 	 * Run the timer thread
@@ -92,14 +117,12 @@ public:
 	void _run();
 
 private:
-	Environment*                          m_environment;
-	std::multimap<std::chrono::steady_clock::time_point, Timer*>
+	std::multimap<std::chrono::steady_clock::time_point, Timer&>
 					                      m_activeTimers{};
 	std::mutex		                      m_mutex{};
 	std::chrono::steady_clock::time_point m_nextPoll{};
 	std::atomic<bool>                     m_terminate{false};
 	std::thread                           m_thread{};
-	Plugin*                               m_plugin{};
 	std::chrono::steady_clock::duration   m_tick{std::chrono::milliseconds{100}};
 };
 

@@ -42,7 +42,8 @@ ServerProxy& ServerProxy::operator=(const ServerProxy& other)
 	return *this;
 }
 
-ServerProxy::ServerProxy(ServerProxy&& other)
+ServerProxy::ServerProxy(ServerProxy&& other):
+	m_server{shared_ptr<ServerBase>(nullptr)}
 {
 	swap(m_server, other.m_server);
 }
@@ -56,13 +57,13 @@ ServerProxy& ServerProxy::operator=(ServerProxy&& other)
 ServerProxy::ServerProxy(ServerBase* server):
 		m_server{shared_ptr<ServerBase>(server)}
 {
-	cerr << "ServerProxy::ServerProxy for server: " << (uint64_t)server <<
+	cerr << "ServerProxy::ServerProxy for server: " << hex << (uint64_t)server <<
 			", uc=" << m_server.use_count() << endl;
 }
 
 ServerProxy::~ServerProxy()
 {
-	cerr << "ServerProxy::~ServerProxy for server: " << (uint64_t)m_server.get() <<
+	cerr << "ServerProxy::~ServerProxy for server: " << hex << (uint64_t)m_server.get() <<
 			", uc=" << m_server.use_count() << endl;
 }
 

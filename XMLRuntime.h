@@ -19,10 +19,10 @@
 #ifndef XMLRUNTIME_H_
 #define XMLRUNTIME_H_
 
-#include "Environment.h"
 #include "ServerEndPoint.h"
 #include "ClientEndPoint.h"
 #include "UniquePointerDict"
+#include "Plugin.h"
 #include "Instance.h"
 #include "Setting.h"
 
@@ -44,18 +44,38 @@ public:
 	 * Constructor
 	 * @param e Global Environment
 	 */
-	XMLRuntime(FreeAX25::Environment* e): m_environment{e}
-	{
-		XERCES_CPP_NAMESPACE::XMLPlatformUtils::Initialize();
-	}
+	XMLRuntime();
+
+	/**
+	 * You can not copy a XMLRuntime.
+	 * @param other Not used.
+	 */
+	XMLRuntime(const XMLRuntime& other) = delete;
+
+	/**
+	 * You can not move a XMLRuntime.
+	 * @param other Not used.
+	 */
+	XMLRuntime(XMLRuntime&& other) = delete;
 
 	/**
 	 * Destructor
 	 */
-	~XMLRuntime()
-	{
-		XERCES_CPP_NAMESPACE::XMLPlatformUtils::Terminate();
-	}
+	~XMLRuntime();
+
+	/**
+	 * You can not assign a XMLRuntime.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	XMLRuntime& operator=(const XMLRuntime& other) = delete;
+
+	/**
+	 * You can not assign a XMLRuntime.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	XMLRuntime& operator=(XMLRuntime&& other) = delete;
 
 	/**
 	 * Read configuration from XML file
@@ -64,8 +84,6 @@ public:
 	void read(const std::string& filename);
 
 private:
-	FreeAX25::Environment* m_environment;
-
     void readSettings(
     		const std::string& id,
     		XERCES_CPP_NAMESPACE::DOMElement* element,

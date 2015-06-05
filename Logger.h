@@ -19,12 +19,11 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
+#include "Plugin.h"
+
 #include <string>
 
 namespace FreeAX25 {
-
-class Environment;
-class Plugin;
 
 /**
  * Specifies the weight of a log message.
@@ -39,10 +38,9 @@ enum class LogLevel {
 
 /**
  * Plugin initialize.
- * @param e The environment struct
  * @param p The plugin struct
  */
-void initLogger(Environment* e, Plugin* p);
+void initLogger(Plugin& p);
 
 /**
  * Plugin start.
@@ -54,9 +52,34 @@ public:
 
 	/**
 	 * Constructor
-	 * @param e Global environment
 	 */
-	Logger(Environment* e);
+	Logger();
+
+	/**
+	 * You can not copy a Logger.
+	 * @param other Not used.
+	 */
+	Logger(const Logger& other) = delete;
+
+	/**
+	 * You can not move a logger.
+	 * @param other Not used.
+	 */
+	Logger(Logger&& other) = delete;
+
+	/**
+	 * You can not assign a Logger.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	Logger& operator=(const Logger& other) = delete;
+
+	/**
+	 * You can not assign a Logger.
+	 * @param other Not used.
+	 * @return Not used.
+	 */
+	Logger& operator=(Logger&& other) = delete;
 
 	/**
 	 * Destructor
@@ -67,7 +90,7 @@ public:
 	 * Initialize the Logger
 	 * @param p Plugin data structure
 	 */
-	void init(Plugin* p);
+	void init(Plugin& p);
 
 	/**
 	 * Start the Logger
@@ -132,8 +155,7 @@ public:
 	static LogLevel decode(const std::string& s);
 
 private:
-	Environment* m_environment;
-	LogLevel     m_level{LogLevel::NONE};
+	LogLevel m_level{LogLevel::NONE};
 	void _log(LogLevel l, const std::string& msg);
 };
 

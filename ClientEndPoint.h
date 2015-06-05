@@ -16,41 +16,41 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SERVERENDPOINT_H_
-#define SERVERENDPOINT_H_
+#ifndef CLIENTENDPOINT_H_
+#define CLIENTENDPOINT_H_
 
 namespace FreeAX25 {
 
 #include <string>
 
-class ServerEndPoint {
+class ClientEndPoint {
 public:
 	/**
 	 * Default constructor.
 	 */
-	ServerEndPoint():
+	ClientEndPoint():
 		m_name{""}, m_url{""} {}
 
 	/**
 	 * Constructor
-	 * @param name Name of this ServerEndPoint.
-	 * @param url Url of this ServerEndPoint.
+	 * @param name Name of this ClientEndPoint.
+	 * @param url Url of this ClientEndPoint.
 	 */
-	ServerEndPoint(const std::string& name, const std::string& url):
+	ClientEndPoint(const std::string& name, const std::string& url):
 		m_name{name}, m_url{url} {};
 
 	/**
 	 * Copy constructor.
 	 * @param other Object to copy from.
 	 */
-	ServerEndPoint(const ServerEndPoint& other):
+	ClientEndPoint(const ClientEndPoint& other):
 		m_name{other.m_name}, m_url{other.m_url} {}
 
 	/**
 	 * Move constructor.
 	 * @param other Object to move from.
 	 */
-	ServerEndPoint(ServerEndPoint&& other):
+	ClientEndPoint(ClientEndPoint&& other):
 		m_name{""}, m_url{""}
 	{
 		std::swap(m_name, other.m_name);
@@ -62,7 +62,7 @@ public:
 	 * @param other Object to copy from.
 	 * @return Reference to this.
 	 */
-	ServerEndPoint& operator=(const ServerEndPoint& other) {
+	ClientEndPoint& operator=(const ClientEndPoint& other) {
 		m_name = other.m_name;
 		m_url = other.m_url;
 		return *this;
@@ -73,7 +73,7 @@ public:
 	 * @param other Object to move from.
 	 * @return Reference to this.
 	 */
-	ServerEndPoint& operator=(ServerEndPoint&& other) {
+	ClientEndPoint& operator=(ClientEndPoint&& other) {
 		std::swap(m_name, other.m_name);
 		std::swap(m_url, other.m_url);
 		return *this;
@@ -82,7 +82,7 @@ public:
 	/**
 	 * Destructor
 	 */
-	~ServerEndPoint() {};
+	~ClientEndPoint() {};
 
 	/**
 	 * Get the setting name
@@ -103,4 +103,4 @@ private:
 
 } /* namespace FreeAX25 */
 
-#endif /* SERVERENDPOINT_H_ */
+#endif /* CLIENTENDPOINT_H_ */

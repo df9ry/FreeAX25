@@ -31,10 +31,7 @@ LDXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0 \
 			-L../../libStringUtil/_$(_ARCH)-$(_CONF) \
 			-L../../libSocketIO/_$(_ARCH)-$(_CONF)
 
-OBJS     =	Configuration.o \
-			DOMTreeErrorReporter.o \
-			Environment.o \
-			FreeAX25.o \
+OBJS     =	DOMTreeErrorReporter.o \
 			Instance.o \
 			Logger.o \
 			Null.o \
@@ -42,8 +39,9 @@ OBJS     =	Configuration.o \
 			ServerBase.o \
 			ServerProxy.o \
 			Timer.o \
-			TimerManager.o \
-			XMLRuntime.o
+			TimerManager.o
+			
+#			XMLRuntime.o
 
 LIBS     =  -lJsonX -lB64 -lStringUtil -lSocketIO \
 			-lpthread -lxerces-c -ldl
