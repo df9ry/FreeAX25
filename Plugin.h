@@ -111,7 +111,7 @@ private:
 	const std::string m_name;
 	const std::string m_file;
 	void*             m_handle{nullptr};
-	void(*m_init)(Plugin& p){nullptr};
+	void(*m_init)(const Plugin& p){nullptr};
 	void(*m_start)(){nullptr};
 };
 

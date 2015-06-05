@@ -50,7 +50,7 @@ static mutex mx;
  * @param e The environment struct
  * @param p The plugin struct
  */
-void initLogger(Plugin& p) {
+void initLogger(const Plugin& p) {
 	environment.logInfo("Init plugin \"_LOGGER\"");
 	environment.logger.init(p);
 }
@@ -85,7 +85,7 @@ Logger::Logger() {
 Logger::~Logger() {
 }
 
-void Logger::init(Plugin& p) {
+void Logger::init(const Plugin& p) {
 	string level = Setting::asStringValue(p.settings, "level", "NONE");
 	logInfo("Set log level to " + level);
 	m_level = decode(level);

@@ -40,7 +40,7 @@ enum class LogLevel {
  * Plugin initialize.
  * @param p The plugin struct
  */
-void initLogger(Plugin& p);
+void initLogger(const Plugin& p);
 
 /**
  * Plugin start.
@@ -90,7 +90,7 @@ public:
 	 * Initialize the Logger
 	 * @param p Plugin data structure
 	 */
-	void init(Plugin& p);
+	void init(const Plugin& p);
 
 	/**
 	 * Start the Logger

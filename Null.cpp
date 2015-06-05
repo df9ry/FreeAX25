@@ -34,7 +34,7 @@ namespace FreeAX25 {
 // The one and only instance
 static Null* instance{nullptr};
 
-void initNull(Plugin& p) {
+void initNull(const Plugin& p) {
 	environment.logInfo("Init plugin \"_NULL\"");
 	if (instance != nullptr) throw runtime_error(
 			"Null already instantiated");
@@ -59,7 +59,7 @@ Null::~Null() {
 	cerr << "Destroying Null !!!" << endl;
 }
 
-void Null::init(Plugin& p) {
+void Null::init(const Plugin& p) {
 	environment.logInfo("Init plugin \"" + p.getName() + "\"");
 	// Build instances:
 	for (UniquePointerDictConstIterator<Instance> ii = p.instances.begin();

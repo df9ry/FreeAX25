@@ -42,7 +42,7 @@ TimerManager::~TimerManager() {
  * @param e The environment struct
  * @param p The plugin struct
  */
-void initTimerManager(Plugin& p) {
+void initTimerManager(const Plugin& p) {
 	environment.logInfo(string("Init plugin \"_TIMER\""));
 	environment.timerManager.init(p);
 }
@@ -59,7 +59,7 @@ void startTimerManager() {
  * Plugin init
  * @param p Plugin data structure
  */
-void TimerManager::init(Plugin& p) {
+void TimerManager::init(const Plugin& p) {
 	int tick = Setting::asIntValue(p.settings, string("tick"), 100);
 	m_tick = milliseconds{tick};
 	environment.logInfo("Tick set to " + to_string(tick) + "ms");

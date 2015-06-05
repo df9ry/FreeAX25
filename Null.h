@@ -30,7 +30,7 @@ namespace FreeAX25 {
  * @param e The environment struct
  * @param p The plugin struct
  */
-void initNull(Plugin& p);
+void initNull(const Plugin& p);
 
 /**
  * Plugin start.
@@ -58,7 +58,7 @@ public:
 	 * Initialize the Null
 	 * @param p Plugin data structure
 	 */
-	void init(Plugin& p);
+	void init(const Plugin& p);
 
 	/**
 	 * Start the Null

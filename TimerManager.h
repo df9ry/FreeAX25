@@ -36,7 +36,7 @@ namespace FreeAX25 {
  * @param e The environment struct
  * @param p The plugin struct
  */
-void initTimerManager(Plugin& p);
+void initTimerManager(const Plugin& p);
 
 /**
  * Plugin start.
@@ -90,7 +90,7 @@ public:
 	 * Initialize the TimerManager
 	 * @param p Plugin data structure
 	 */
-	void init(Plugin& p);
+	void init(const Plugin& p);
 
 	/**
 	 * Run the timer thread

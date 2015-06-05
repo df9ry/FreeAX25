@@ -59,7 +59,7 @@ void Plugin::load() {
 		if (!m_handle) throw runtime_error(
 				"Unable to load " + m_name + "! Cause: " + dlerror());
 		dlerror(); // Clear error messages
-		m_init = (void(*)(Plugin&)) dlsym(m_handle, "init");
+		m_init = (void(*)(const Plugin&)) dlsym(m_handle, "init");
 		error = dlerror();
 		if (error != nullptr) throw runtime_error(
 				"Unable to link \"init\" from " + m_name + "! Cause: " +error);
