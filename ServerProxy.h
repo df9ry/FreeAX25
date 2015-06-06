@@ -140,7 +140,7 @@ public:
 	 * a connect.
 	 */
 	void open() {
-		open (JsonX::JsonXValue());
+		open(JsonX::JsonXValue());
 	}
 
 	/**

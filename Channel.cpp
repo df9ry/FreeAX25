@@ -1,8 +1,19 @@
 /*
- * Channel.cpp
- *
- *  Created on: 06.06.2015
- *      Author: tania
+    Project FreeAX25
+    Copyright (C) 2015  tania@df9ry.de
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "Channel.h"
@@ -19,15 +30,15 @@ Channel::Channel(): m_tx{ServerProxy()}
 {
 }
 
-Channel::Channel(const ClientEndPoint& cep) {
-	if (cep.getUrl().empty()) throw runtime_error(
-			"Unable to create channel to server \"\"");
-	ServerProxy broker{environment.serverProxies.findEntry(cep.getUrl())};
-	if (!broker) throw runtime_error(
-			"Unable to find broker service " + cep.getUrl());
-	m_tx = broker.connect(getServerProxy());
-	if (!m_tx) throw runtime_error(
-			"Unable to connect service " + cep.getUrl());
+Channel::Channel(const ServerProxy& link, bool isUplink) {
+	if (isUplink) {
+		ServerProxy sp{link};
+		m_tx = sp.connect(getServerProxy());
+		if (!m_tx) throw runtime_error(
+				"Unable to connect uplink service");
+	} else {
+		m_tx = link;
+	}
 }
 
 Channel::~Channel() {

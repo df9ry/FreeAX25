@@ -29,15 +29,15 @@ namespace FreeAX25 {
 ServerProxy::ServerProxy():
 		m_server{shared_ptr<ServerBase>(nullptr)}
 {
-	cerr << "ServerProxy::ServerProxy() for server: " << hex << (uint64_t)m_server.get() <<
-			", uc=" << m_server.use_count() << endl;
+	//cerr << "ServerProxy::ServerProxy() for server: " << hex << (uint64_t)m_server.get() <<
+	//		", uc=" << m_server.use_count() << endl;
 }
 
 ServerProxy::ServerProxy(const ServerProxy& other):
 		m_server{other.m_server}
 {
-	cerr << "ServerProxy::ServerProxy(const ServerProxy&) for server: " <<
-			hex << (uint64_t)m_server.get() << ", uc=" << m_server.use_count() << endl;
+	//cerr << "ServerProxy::ServerProxy(const ServerProxy&) for server: " <<
+	//		hex << (uint64_t)m_server.get() << ", uc=" << m_server.use_count() << endl;
 }
 
 ServerProxy& ServerProxy::operator=(const ServerProxy& other)
@@ -50,8 +50,8 @@ ServerProxy::ServerProxy(ServerProxy&& other):
 	m_server{shared_ptr<ServerBase>(nullptr)}
 {
 	swap(m_server, other.m_server);
-	cerr << "ServerProxy::ServerProxy(ServerProxy&&) for server: " <<
-			hex << (uint64_t)m_server.get() << ", uc=" << m_server.use_count() << endl;
+	//cerr << "ServerProxy::ServerProxy(ServerProxy&&) for server: " <<
+	//		hex << (uint64_t)m_server.get() << ", uc=" << m_server.use_count() << endl;
 }
 
 ServerProxy& ServerProxy::operator=(ServerProxy&& other)
@@ -63,14 +63,14 @@ ServerProxy& ServerProxy::operator=(ServerProxy&& other)
 ServerProxy::ServerProxy(ServerBase* server):
 		m_server{shared_ptr<ServerBase>(server)}
 {
-	cerr << "ServerProxy::ServerProxy(ServerBase* server) for server: " <<
-			hex << (uint64_t)server << ", uc=" << m_server.use_count() << endl;
+	//cerr << "ServerProxy::ServerProxy(ServerBase* server) for server: " <<
+	//		hex << (uint64_t)server << ", uc=" << m_server.use_count() << endl;
 }
 
 ServerProxy::~ServerProxy()
 {
-	cerr << "ServerProxy::~ServerProxy for server: " << hex << (uint64_t)m_server.get() <<
-			", uc=" << m_server.use_count() << endl;
+	//cerr << "ServerProxy::~ServerProxy for server: " << hex << (uint64_t)m_server.get() <<
+	//		", uc=" << m_server.use_count() << endl;
 }
 
 ServerProxy ServerProxy::connect(JsonX::JsonXValue&& parameter, ServerProxy&& downlink) {
@@ -79,7 +79,7 @@ ServerProxy ServerProxy::connect(JsonX::JsonXValue&& parameter, ServerProxy&& do
 }
 
 void ServerProxy::open(JsonX::JsonXValue&& parameter) {
-	if (!m_server.get()) throw runtime_error("Server disconnected");
+	if (!m_server) throw runtime_error("Server disconnected");
 	m_server.get()->onOpen(move(parameter));
 }
 

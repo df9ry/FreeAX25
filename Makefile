@@ -44,10 +44,11 @@ OBJS     =	FreeAX25.o \
 			ServerProxy.o \
 			Timer.o \
 			TimerManager.o \
+			UUID.o \
 			XMLRuntime.o
 
 LIBS     =  -lJsonX -lB64 -lStringUtil -lSocketIO \
-			-lpthread -lxerces-c -ldl
+			-lpthread -lxerces-c -luuid -ldl
 
 TARGET   =	FreeAX25
 
