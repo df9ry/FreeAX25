@@ -89,6 +89,8 @@ protected:
 
 	virtual JsonX::JsonXValue onCtrl(JsonX::JsonXValue&& request);
 
+	void _release();
+
 private:
 	ServerProxy m_proxy;
 };

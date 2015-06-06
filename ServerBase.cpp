@@ -64,4 +64,8 @@ ServerProxy ServerBase::getServerProxy() {
 	return m_proxy;
 }
 
+void ServerBase::_release() {
+	m_proxy = ServerProxy();
+}
+
 } /* namespace JsonX */
