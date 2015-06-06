@@ -32,6 +32,7 @@ LDXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0 \
 			-L../../libSocketIO/_$(_ARCH)-$(_CONF)
 
 OBJS     =	FreeAX25.o \
+			Channel.o \
 			Configuration.o \
 			DOMTreeErrorReporter.o \
 			Environment.o \
