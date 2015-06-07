@@ -56,7 +56,7 @@ Null::Null() {
 }
 
 Null::~Null() {
-	cerr << "Destroying Null !!!" << endl;
+	environment.logError("Destructor called on NULL session " + to_string((uint64_t)this));
 }
 
 void Null::init(const Plugin& p) {
@@ -81,24 +81,24 @@ void Null::start() {
 }
 
 ServerProxy Null::onConnect(JsonX::JsonXValue&& parameter, ServerProxy&& downlink) {
-	cerr << "Null connect called. I am: " << hex << (uint64_t)this << endl;
+	environment.logDebug("Download connect on NULL session " + to_string((uint64_t)this));
 	return getServerProxy();
 }
 
 void Null::onOpen(JsonX::JsonXValue&& parameter) {
-	cerr << "Null open called. I am: " << hex << (uint64_t)this << endl;
+	environment.logDebug("Download open on NULL session " + to_string((uint64_t)this));
 }
 
 void Null::onClose(JsonX::JsonXValue&& parameter) {
-	cerr << "Null close called. I am: " << hex << (uint64_t)this << endl;
+	environment.logDebug("Download close on NULL session " + to_string((uint64_t)this));
 }
 
 void Null::onReceive(JsonX::JsonXValue&& message, MessagePriority priority) {
-	cerr << "Null send called. I am: " << hex << (uint64_t)this << endl;
+	environment.logDebug("Download message on NULL session " + to_string((uint64_t)this));
 }
 
 JsonX::JsonXValue Null::onCtrl(JsonX::JsonXValue&& request) {
-	cerr << "Null ctrl called. I am: " << hex << (uint64_t)this << endl;
+	environment.logDebug("Download control on NULL session " + to_string((uint64_t)this));
 	return JsonX::JsonXValue{};
 }
 

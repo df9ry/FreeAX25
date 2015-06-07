@@ -18,6 +18,7 @@
 
 #include "ServerBase.h"
 #include "ServerProxy.h"
+#include "Environment.h"
 
 #include "JsonXObject.h"
 
@@ -33,11 +34,11 @@ namespace FreeAX25 {
 class ClientProxy;
 
 ServerBase::ServerBase(): m_proxy(this) {
-	cerr << "ServerBase::ServerBase: " << hex << (uint64_t)this << endl;
+	environment.logDebug("Constructor on ServerBase: " + to_string((uint64_t)this));
 }
 
 ServerBase::~ServerBase() {
-	cerr << "ServerBase::~ServerBase: " << hex << (uint64_t)this << endl;
+	environment.logDebug("Destructor on ServerBase: " + to_string((uint64_t)this));
 }
 
 ServerProxy ServerBase::onConnect(JsonX::JsonXValue&& parameter, ServerProxy&& downlink) {
