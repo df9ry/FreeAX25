@@ -1,0 +1,15 @@
+[submodule "FreeAX25_Zero"]
+	path = FreeAX25_Zero
+	url = https://github.com/df9ry/FreeAX25_Zero.git
+[submodule "FreeAX25_TCPServer"]
+	path = FreeAX25_TCPServer
+	url = https://github.com/df9ry/FreeAX25_TCPServer.git
+[submodule "FreeAX25_Config"]
+	path = FreeAX25_Config
+	url = https://github.com/df9ry/FreeAX25_Config.git
+[submodule "FreeAX25_CLI"]
+	path = FreeAX25_CLI
+	url = https://github.com/df9ry/FreeAX25_CLI.git
+[submodule "libFreeAX25Runtime"]
+	path = libFreeAX25Runtime
+	url = https://github.com/df9ry/libFreeAX25Runtime.git
