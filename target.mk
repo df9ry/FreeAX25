@@ -1,4 +1,4 @@
-#   Project FreeAX25
+#   Project libFreeAX25Runtime
 #   Copyright (C) 2015  tania@df9ry.de
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -16,25 +16,29 @@
 	
 .SUFFIXES:
 
-ifndef _ARCH
-_ARCH := unknown
-export _ARCH
-endif
-
 ifndef _CONF
-_CONF := debug
+_CONF := Debug
 export _CONF
 endif
 
-OBJDIR := _$(_ARCH)-$(_CONF)
+OBJDIR := _$(_CONF)
+DOCDIR := doc
 
 MAKETARGET = $(MAKE) --no-print-directory -C $@ -f $(CURDIR)/Makefile \
 	SRCDIR=$(CURDIR) $(MAKECMDGOALS)
+	
+DOCTARGET  = $(MAKE) --no-print-directory -C $@ -f $(CURDIR)/Makefile \
+	SRCDIR=$(CURDIR) doc
 
 .PHONY: $(OBJDIR)
 $(OBJDIR):
 	+@[ -d $@ ] || mkdir -p $@
 	+@$(MAKETARGET)
+
+.PHONY: $(DOCDIR)
+$(DOCDIR):
+	+@[ -d $@ ] || mkdir -p $@
+	+@$(DOCTARGET)
 
 Makefile : ;
 %.mk :: ;
@@ -43,5 +47,5 @@ Makefile : ;
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJDIR)
+	rm -rf $(OBJDIR) $(DOCDIR)
 

@@ -1,4 +1,4 @@
-#   Project FreeAX25
+#   Project libJsonX
 #   Copyright (C) 2015  tania@df9ry.de
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -21,53 +21,26 @@ else
 
 VPATH = $(SRCDIR)
 
-CXXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0 \
-			-I../../libStringUtil \
-			-I../../libJsonX
+CXXFLAGS =				
 
-LDXFLAGS =	-std=c++11 -pedantic -Wall -g -rdynamic -fmessage-length=0 \
-			-L../../libJsonX/_$(_ARCH)-$(_CONF) \
-			-L../../libB64/_$(_ARCH)-$(_CONF) \
-			-L../../libStringUtil/_$(_ARCH)-$(_CONF) \
-			-L../../libSocketIO/_$(_ARCH)-$(_CONF)
+LDXFLAGS =	
 
-OBJS     =	FreeAX25.o \
-			Channel.o \
-			Configuration.o \
-			DOMTreeErrorReporter.o \
-			Environment.o \
-			Instance.o \
-			Logger.o \
-			Null.o \
-			Plugin.o \
-			ServerBase.o \
-			ServerProxy.o \
-			Timer.o \
-			TimerManager.o \
-			UUID.o \
-			XMLRuntime.o
+OBJS     =  
+			
+LIBS     =  
 
-LIBS     =  -lJsonX -lB64 -lStringUtil -lSocketIO \
-			-lpthread -lxerces-c -luuid -ldl
-
-TARGET   =	FreeAX25
+TARGET   =	
 
 $(TARGET):	$(OBJS)
 	$(CXX) $(LDXFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 	
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $<	
+	$(CXX) $(CXXFLAGS) -c $<
 	
 all: $(TARGET)
-	cp ../*.xml ../*.xsd .
-	cp ../../libStringUtil/_$(_ARCH)-$(_CONF)/libStringUtil.so .
-	cp ../../libJsonX/_$(_ARCH)-$(_CONF)/libJsonX.so .
-	cp ../../libB64/_$(_ARCH)-$(_CONF)/libB64.so .
-	cp ../../libSocketIO/_$(_ARCH)-$(_CONF)/libSocketIO.so .
 	echo "Build OK"
 	
 run: all
-	LD_LIBRARY_PATH=./ ./$(TARGET)
 	echo "Run OK"
 
 #----- Begin Boilerplate
