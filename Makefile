@@ -1,4 +1,4 @@
-#   Project libJsonX
+#   Project FreeAX25
 #   Copyright (C) 2015  tania@df9ry.de
 #
 #   This program is free software: you can redistribute it and/or modify
